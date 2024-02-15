@@ -27,7 +27,7 @@ export default {
   data() {
     return {
       title: "글제목",
-      detail1: "글내용입니다.",
+      detail1: "글내용입니다. ",
     };
   },
   mounted() {},
