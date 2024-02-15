@@ -4,7 +4,7 @@
       <div class="col-lg-12">
         <div class="row" style="height: 50%">
           <div class="col-lg-3 col-md-6 col-12">
-            <h1>추가기능 예정</h1>
+            <h1>추가기능 예정 api 테스트 -> {{ this.testData }}</h1>
           </div>
           <paginate
             v-model="page"
@@ -39,6 +39,7 @@ import Content from "./Content.vue";
 </script>
 <script>
 // import Carousel from "./components/Carousel.vue";
+import axios from "axios";
 
 import US from "@/assets/img/icons/flags/US.png";
 import DE from "@/assets/img/icons/flags/DE.png";
@@ -48,6 +49,8 @@ import BR from "@/assets/img/icons/flags/BR.png";
 export default {
   data() {
     return {
+      testData: "",
+
       stats: {
         money: {
           title: "Today's Money",
@@ -120,6 +123,13 @@ export default {
     // Carousel,
   },
 
+  created() {
+    axios.post("/api/test").then((res) => {
+      console.log(res.data);
+      this.testData = res.data;
+    });
+  },
+
   beforeMount() {
     this.$store.state.showNavbar = true;
     this.$store.state.showSidenav = true;
@@ -128,5 +138,6 @@ export default {
     this.$store.state.showNavbar = true;
     this.$store.state.showSidenav = true;
   },
+  methods() {},
 };
 </script>
