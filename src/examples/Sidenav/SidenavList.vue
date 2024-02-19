@@ -11,66 +11,79 @@
           개인페이지
         </h6>
       </li>
+      <!-- 대분류 메뉴 -->
+      <template
+        v-for="(list, index) in folderInfo.folderList"
+        :key="list.folder_seq"
+      >
+        <li class="nav-item">
+          <!-- href로 소분류 찾아서 컨트롤 함 onclick 이벤트 필요 없습니다.-->
+          <a
+            data-bs-toggle="collapse"
+            v-bind:href="'#' + 'contents' + index"
+            class="nav-link active"
+            aria-controls="dashboardsExamples"
+            role="button"
+            v-bind:id="'folder' + index"
+          >
+            <div
+              class="icon icon-shape icon-sm text-center d-flex align-items-center justify-content-center"
+            >
+              <i class="ni ni-shop text-primary text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">{{ list.folder_name }}</span>
+          </a>
+          <!-- 소분류 메뉴 -->
+          <div class="collapse" v-bind:id="'contents' + index" style="">
+            <ul class="nav ms-4">
+              <template v-for="i in list.nodeList" :key="i.folder_seq">
+                <li class="nav-item active">
+                  <a
+                    class="nav-link active"
+                    href="../../pages/dashboards/landing.html"
+                  >
+                    <span class="sidenav-mini-icon"> </span>
+                    <span class="sidenav-normal"> {{ i.title }} </span>
+                  </a>
+                </li>
+              </template>
+              <li class="nav-item">
+                <a class="nav-link" href="">
+                  <span class="sidenav-mini-icon"> C </span>
+                  <span class="sidenav-normal"> + 신규글쓰기 </span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target="#folderModify"
+                  @click="folderSeq(list.folder_seq)"
+                >
+                  <span class="sidenav-mini-icon"> C </span>
+                  <span class="sidenav-normal">
+                    <i class="ni ni-settings-gear-65"></i>
+                    폴더관리
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </template>
       <li class="nav-item">
+        <!-- 추후 herf 유지하고(마우스 버튼표시) @click 이벤트 걸어야함 -->
         <a
-          data-bs-toggle="collapse"
-          href="#dashboardsExamples"
           class="nav-link active"
-          aria-controls="dashboardsExamples"
-          role="button"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#folderCreate"
         >
           <div
             class="icon icon-shape icon-sm text-center d-flex align-items-center justify-content-center"
-          >
-            <i class="ni ni-shop text-primary text-sm opacity-10"></i>
-          </div>
-          <span class="nav-link-text ms-1">폴더1</span>
-        </a>
-        <div class="collapse" id="dashboardsExamples" style="">
-          <ul class="nav ms-4">
-            <li class="nav-item active">
-              <a
-                class="nav-link active"
-                href="../../pages/dashboards/landing.html"
-              >
-                <span class="sidenav-mini-icon"> </span>
-                <span class="sidenav-normal"> 새글1 </span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="">
-                <span class="sidenav-mini-icon"> D </span>
-                <span class="sidenav-normal"> 새글2 </span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="">
-                <span class="sidenav-mini-icon"> A </span>
-                <span class="sidenav-normal"> 새글3 </span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="">
-                <span class="sidenav-mini-icon"> S </span>
-                <span class="sidenav-normal"> 새글4 </span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="">
-                <span class="sidenav-mini-icon"> C </span>
-                <span class="sidenav-normal"> + 신규글쓰기 </span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li class="nav-item">
-        <!-- 추후 herf 유지하고(마우스 버튼표시) @click 이벤트 걸어야함 -->
-        <a class="nav-link active" href="">
-          <div
-            class="icon icon-shape icon-sm text-center d-flex align-items-center justify-content-center"
           ></div>
-          <span class="nav-link-text ms-1">+ 신규폴더생성</span>
+          <span class="nav-link-text ms-1"> + 신규폴더생성</span>
         </a>
       </li>
 
@@ -99,217 +112,121 @@
           </a>
         </router-link>
       </li>
-      <li class="nav-item">
-        <a
-          data-bs-toggle="collapse"
-          href="#componentsExamples"
-          class="nav-link collapsed"
-          aria-controls="componentsExamples"
-          role="button"
-          aria-expanded="false"
-        >
-          <div
-            class="icon icon-shape icon-sm text-center d-flex align-items-center justify-content-center"
-          >
-            <i class="ni ni-app text-dark text-sm"></i>
-          </div>
-          <span class="nav-link-text ms-1">Components</span>
-        </a>
-        <div class="collapse" id="componentsExamples" style="">
-          <ul class="nav ms-4">
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://www.creative-tim.com/learning-lab/bootstrap/alerts/argon-dashboard"
-                target="_blank"
-              >
-                <span class="sidenav-mini-icon"> A </span>
-                <span class="sidenav-normal"> Alerts </span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://www.creative-tim.com/learning-lab/bootstrap/badge/argon-dashboard"
-                target="_blank"
-              >
-                <span class="sidenav-mini-icon"> B </span>
-                <span class="sidenav-normal"> Badge </span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://www.creative-tim.com/learning-lab/bootstrap/buttons/argon-dashboard"
-                target="_blank"
-              >
-                <span class="sidenav-mini-icon"> B </span>
-                <span class="sidenav-normal"> Buttons </span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://www.creative-tim.com/learning-lab/bootstrap/cards/argon-dashboard"
-                target="_blank"
-              >
-                <span class="sidenav-mini-icon"> C </span>
-                <span class="sidenav-normal"> Card </span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://www.creative-tim.com/learning-lab/bootstrap/carousel/argon-dashboard"
-                target="_blank"
-              >
-                <span class="sidenav-mini-icon"> C </span>
-                <span class="sidenav-normal"> Carousel </span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://www.creative-tim.com/learning-lab/bootstrap/collapse/argon-dashboard"
-                target="_blank"
-              >
-                <span class="sidenav-mini-icon"> C </span>
-                <span class="sidenav-normal"> Collapse </span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://www.creative-tim.com/learning-lab/bootstrap/dropdowns/argon-dashboard"
-                target="_blank"
-              >
-                <span class="sidenav-mini-icon"> D </span>
-                <span class="sidenav-normal"> Dropdowns </span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://www.creative-tim.com/learning-lab/bootstrap/forms/argon-dashboard"
-                target="_blank"
-              >
-                <span class="sidenav-mini-icon"> F </span>
-                <span class="sidenav-normal"> Forms </span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://www.creative-tim.com/learning-lab/bootstrap/modal/argon-dashboard"
-                target="_blank"
-              >
-                <span class="sidenav-mini-icon"> M </span>
-                <span class="sidenav-normal"> Modal </span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://www.creative-tim.com/learning-lab/bootstrap/navs/argon-dashboard"
-                target="_blank"
-              >
-                <span class="sidenav-mini-icon"> N </span>
-                <span class="sidenav-normal"> Navs </span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://www.creative-tim.com/learning-lab/bootstrap/navbar/argon-dashboard"
-                target="_blank"
-              >
-                <span class="sidenav-mini-icon"> N </span>
-                <span class="sidenav-normal"> Navbar </span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://www.creative-tim.com/learning-lab/bootstrap/pagination/argon-dashboard"
-                target="_blank"
-              >
-                <span class="sidenav-mini-icon"> P </span>
-                <span class="sidenav-normal"> Pagination </span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://www.creative-tim.com/learning-lab/bootstrap/popovers/argon-dashboard"
-                target="_blank"
-              >
-                <span class="sidenav-mini-icon"> P </span>
-                <span class="sidenav-normal"> Popovers </span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://www.creative-tim.com/learning-lab/bootstrap/progress/argon-dashboard"
-                target="_blank"
-              >
-                <span class="sidenav-mini-icon"> P </span>
-                <span class="sidenav-normal"> Progress </span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://www.creative-tim.com/learning-lab/bootstrap/spinners/argon-dashboard"
-                target="_blank"
-              >
-                <span class="sidenav-mini-icon"> S </span>
-                <span class="sidenav-normal"> Spinners </span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://www.creative-tim.com/learning-lab/bootstrap/tables/argon-dashboard"
-                target="_blank"
-              >
-                <span class="sidenav-mini-icon"> T </span>
-                <span class="sidenav-normal"> Tables </span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link"
-                href="https://www.creative-tim.com/learning-lab/bootstrap/tooltips/argon-dashboard"
-                target="_blank"
-              >
-                <span class="sidenav-mini-icon"> T </span>
-                <span class="sidenav-normal"> Tooltips </span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a
-          class="nav-link"
-          href="https://github.com/creativetimofficial/ct-argon-dashboard-pro/blob/main/CHANGELOG.md"
-          target="_blank"
-        >
-          <div
-            class="icon icon-shape icon-sm text-center me-2 d-flex align-items-center justify-content-center"
-          >
-            <i class="ni ni-align-left-2 text-dark text-sm"></i>
-          </div>
-          <span class="nav-link-text ms-1">Changelog</span>
-        </a>
-      </li>
     </ul>
+  </div>
+
+  <div class="col-md-4">
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="folderCreate"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalSignTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+          <div class="modal-body p-0">
+            <div class="card card-plain">
+              <div class="card-header pb-0 text-left">
+                <h3 class="font-weight-bolder text-primary text-gradient">
+                  신규폴더 생성
+                </h3>
+              </div>
+              <div class="card-body pb-3">
+                <form role="form text-left">
+                  <label>폴더명</label>
+                  <div class="input-group mb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Name"
+                      aria-label="Name"
+                      aria-describedby="name-addon"
+                      v-model="folder_Name"
+                    />
+                  </div>
+                  <div class="text-center">
+                    <button
+                      data-bs-dismiss="modal"
+                      type="button"
+                      class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0"
+                      @click="folderCreate()"
+                    >
+                      폴더 생성
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="folderModify"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalSignTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+          <div class="modal-body p-0">
+            <div class="card card-plain">
+              <div class="card-header pb-0 text-left">
+                <h3 class="font-weight-bolder text-primary text-gradient">
+                  폴더 관리
+                </h3>
+              </div>
+              <div class="card-body pb-3">
+                <form role="form text-left">
+                  <label>폴더명</label>
+                  <div class="input-group mb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Name"
+                      aria-label="Name"
+                      aria-describedby="name-addon"
+                      v-model="mod_folder_Name"
+                    />
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      data-bs-dismiss="modal"
+                      type="button"
+                      class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0"
+                      @click="folderModify('U')"
+                    >
+                      수정
+                    </button>
+                    <button
+                      data-bs-dismiss="modal"
+                      type="button"
+                      class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0"
+                      @click="folderModify('D')"
+                    >
+                      삭제
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
-// import SidenavItem from "./SidenavItem.vue";
-// import SidenavCard from "./SidenavCard.vue";
+import axios from "axios";
 
 export default {
   name: "SidenavList",
@@ -318,8 +235,11 @@ export default {
   },
   data() {
     return {
-      title: "Argon Dashboard 2",
-      controls: "dashboardsExamples",
+      folderInfo: {
+        folderList: [],
+        loginId: "",
+      },
+      pfolderSeq: "",
       isActive: "active",
     };
   },
@@ -327,10 +247,64 @@ export default {
     // SidenavItem,
     // SidenavCard
   },
+  mounted() {
+    //let loginInfo = this.$store.state.loginInfo;
+    //this.member_seq = loginInfo.loginId;
+    this.member_seq = "1";
+    this.search();
+  },
   methods: {
-    getRoute() {
-      const routeArr = this.$route.path.split("/");
-      return routeArr[1];
+    //폴더 조회
+    search: function () {
+      let vm = this;
+      let params = new URLSearchParams();
+      params.append("member_seq", this.member_seq);
+      axios
+        .post("/api/folderView", params)
+        .then((response) => {
+          console.log(JSON.stringify(response));
+          vm.folderInfo = response.data;
+        })
+        .catch(function (error) {
+          alert("에러! API 요청에 오류가 있습니다. " + error);
+        });
+    },
+    //폴더 생성
+    folderCreate: function () {
+      let params = new URLSearchParams();
+      params.append("member_seq", this.member_seq);
+      params.append("folder_name", this.folder_Name);
+      axios
+        .post("/api/folderCreate", params)
+        .then((response) => {
+          console.log(JSON.stringify(response));
+          this.folder_Name = "";
+          this.search();
+        })
+        .catch(function (error) {
+          alert("에러! API 요청에 오류가 있습니다. " + error);
+        });
+    },
+    folderSeq: function (folderSeq) {
+      console.log(folderSeq);
+      this.PfolderSeq = folderSeq;
+    },
+    //폴더 수정
+    folderModify: function (stat) {
+      let params = new URLSearchParams();
+      params.append("folder_seq", this.PfolderSeq);
+      params.append("folder_name", this.mod_folder_Name);
+      params.append("stat", stat);
+      axios
+        .post("/api/folderModify", params)
+        .then((response) => {
+          console.log(JSON.stringify(response));
+          this.mod_folder_Name = "";
+          this.search();
+        })
+        .catch(function (error) {
+          alert("에러! API 요청에 오류가 있습니다. " + error);
+        });
     },
   },
 };
