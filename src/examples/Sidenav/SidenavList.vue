@@ -40,7 +40,8 @@
                 <li class="nav-item active">
                   <a
                     class="nav-link active"
-                    href="../../pages/dashboards/landing.html"
+                    href=""
+                    @click="contentsMove($event, i.folder_seq, i.contents_seq)"
                   >
                     <span class="sidenav-mini-icon"> </span>
                     <span class="sidenav-normal"> {{ i.title }} </span>
@@ -59,7 +60,7 @@
                   type="button"
                   data-bs-toggle="modal"
                   data-bs-target="#folderModify"
-                  @click="folderSeq(list.folder_seq)"
+                  @click="folderSeq(list.folder_seq, list.folder_name)"
                 >
                   <span class="sidenav-mini-icon"> C </span>
                   <span class="sidenav-normal">
@@ -240,13 +241,11 @@ export default {
         loginId: "",
       },
       pfolderSeq: "",
+      pfolderName: "",
       isActive: "active",
     };
   },
-  components: {
-    // SidenavItem,
-    // SidenavCard
-  },
+  components: {},
   mounted() {
     //let loginInfo = this.$store.state.loginInfo;
     //this.member_seq = loginInfo.loginId;
@@ -274,20 +273,26 @@ export default {
       let params = new URLSearchParams();
       params.append("member_seq", this.member_seq);
       params.append("folder_name", this.folder_Name);
-      axios
-        .post("/api/folderCreate", params)
-        .then((response) => {
-          console.log(JSON.stringify(response));
-          this.folder_Name = "";
-          this.search();
-        })
-        .catch(function (error) {
-          alert("에러! API 요청에 오류가 있습니다. " + error);
-        });
+
+      if (this.folder_Name != null) {
+        axios
+          .post("/api/folderCreate", params)
+          .then((response) => {
+            console.log(JSON.stringify(response));
+            this.folder_Name = "";
+            this.search();
+          })
+          .catch(function (error) {
+            alert("에러! API 요청에 오류가 있습니다. " + error);
+          });
+      } else {
+        alert("에러 폴더명을 입력해주세요.");
+      }
     },
-    folderSeq: function (folderSeq) {
-      console.log(folderSeq);
+    folderSeq: function (folderSeq, folderName) {
+      console.table(folderSeq + " " + folderName);
       this.PfolderSeq = folderSeq;
+      this.mod_folder_Name = folderName;
     },
     //폴더 수정
     folderModify: function (stat) {
@@ -295,16 +300,39 @@ export default {
       params.append("folder_seq", this.PfolderSeq);
       params.append("folder_name", this.mod_folder_Name);
       params.append("stat", stat);
-      axios
-        .post("/api/folderModify", params)
-        .then((response) => {
-          console.log(JSON.stringify(response));
-          this.mod_folder_Name = "";
-          this.search();
-        })
-        .catch(function (error) {
-          alert("에러! API 요청에 오류가 있습니다. " + error);
-        });
+      if (this.folder_Name != null) {
+        axios
+          .post("/api/folderModify", params)
+          .then((response) => {
+            console.log(JSON.stringify(response));
+            this.mod_folder_Name = "";
+            this.search();
+          })
+          .catch(function (error) {
+            alert("에러! API 요청에 오류가 있습니다. " + error);
+          });
+      } else {
+        alert("에러 폴더명을 입력해주세요.");
+      }
+    },
+    contentsMove: function (e, folderSeq, contentsSeq) {
+      e.preventDefault();
+      console.log(folderSeq, contentsSeq);
+      console.log(
+        "store : " +
+          this.$store.state.folderSeq +
+          " " +
+          this.$store.state.contentsSeq
+      );
+      //prop 에 담고 api 호출
+      this.$store.state.folderSeq = folderSeq;
+      this.$store.state.contentsSeq = contentsSeq;
+      console.log(
+        "store : " +
+          this.$store.state.folderSeq +
+          " " +
+          this.$store.state.contentsSeq
+      );
     },
   },
 };
