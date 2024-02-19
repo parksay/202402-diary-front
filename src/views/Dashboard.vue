@@ -3,32 +3,35 @@
     <div class="row">
       <div class="col-lg-12">
         <div class="row" style="height: 50%">
-          <div class="col-lg-3 col-md-6 col-12">
-            <h1>추가기능 예정 api 테스트 -> {{ this.testData }}</h1>
+          <div class="col-lg-3 col-md-3 col-5">
+            <Calendar></Calendar>
           </div>
-          <paginate
-            v-model="page"
-            :page-count="20"
-            :page-range="3"
-            :margin-pages="2"
-            :click-handler="clickCallback"
-            :prev-text="'Prev'"
-            :next-text="'Next'"
-            :container-class="'pagination'"
-            :page-class="'page-item'"
-          >
-          </paginate>
+          <!-- <div class="col-lg-3 col-md-6 col-10">
+            <div class="d-flex">
+              <div class="me-auto">
+                <h1 class="mb-0 display-1 font-weight-bold mt-n4">12°C</h1>
+                <h6 class="mb-0 text-uppercase ms-1">Cloudy</h6>
+              </div>
+              <div class="ms-auto">
+                <img
+                  class="w-50 float-end mt-lg-n4"
+                  src="@/assets/img/small-logos/icon-sun-cloud.png"
+                  alt="image sun"
+                />
+              </div>
+            </div>
+          </div> -->
         </div>
         <div class="row">
           <div class="col-lg-7 mb-lg">
-            <!-- line chart -->
-            <div class="card z-index-2">
+            <div class="card z-index-1">
               <Content />
             </div>
           </div>
-          <!-- <div class="col-lg-5">
-            <carousel />
-          </div> -->
+          <!-- 최근작성한 글  -->
+          <div class="col-lg-4 mb-lg">
+            <TransactionCard></TransactionCard>
+          </div>
         </div>
       </div>
     </div>
@@ -36,91 +39,26 @@
 </template>
 <script setup>
 import Content from "./Content.vue";
+import Calendar from "@/examples/Calendar.vue";
+// import CardToDo from "./components/CardToDo.vue";
+import TransactionCard from "./components/TransactionCard.vue";
 </script>
 <script>
 // import Carousel from "./components/Carousel.vue";
 import axios from "axios";
-
-import US from "@/assets/img/icons/flags/US.png";
-import DE from "@/assets/img/icons/flags/DE.png";
-import GB from "@/assets/img/icons/flags/GB.png";
-import BR from "@/assets/img/icons/flags/BR.png";
 
 export default {
   data() {
     return {
       testData: "",
 
-      stats: {
-        money: {
-          title: "Today's Money",
-          value: "$53,000",
-          percentage: "+55%",
-          iconClass: "ni ni-money-coins",
-          detail: "since yesterday",
-          iconBackground: "bg-gradient-primary",
-        },
-        users: {
-          title: "Today's Users",
-          value: "2,300",
-          percentage: "+3%",
-          iconClass: "ni ni-world",
-          iconBackground: "bg-gradient-danger",
-          detail: "since last week",
-        },
-        clients: {
-          title: "New Clients",
-          value: "+3,462",
-          percentage: "-2%",
-          iconClass: "ni ni-paper-diploma",
-          percentageColor: "text-danger",
-          iconBackground: "bg-gradient-success",
-          detail: "since last quarter",
-        },
-        sales: {
-          title: "Sales",
-          value: "$103,430",
-          percentage: "+5%",
-          iconClass: "ni ni-cart",
-          iconBackground: "bg-gradient-warning",
-          detail: "than last month",
-        },
-      },
-      sales: {
-        us: {
-          country: "United States",
-          sales: 2500,
-          value: "$230,900",
-          bounce: "29.9%",
-          flag: US,
-        },
-        germany: {
-          country: "Germany",
-          sales: "3.900",
-          value: "$440,000",
-          bounce: "40.22%",
-          flag: DE,
-        },
-        britain: {
-          country: "Great Britain",
-          sales: "1.400",
-          value: "$190,700",
-          bounce: "23.44%",
-          flag: GB,
-        },
-        brasil: {
-          country: "Brasil",
-          sales: "562",
-          value: "$143,960",
-          bounce: "32.14%",
-          flag: BR,
-        },
-      },
+      stats: {},
     };
   },
   components: {
     Content,
-    // Carousel,
+    Calendar,
+    TransactionCard,
   },
 
   created() {
