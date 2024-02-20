@@ -41,11 +41,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr v-for="item in this.NotList" v-bind:key="item">
               <td>
                 <div class="d-flex px-3">
                   <div class="my-auto">
-                    <h6 class="mb-0 text-sm">1</h6>
+                    <h6 class="mb-0 text-sm">{{ item.notice_seq }}</h6>
                   </div>
                 </div>
               </td>
@@ -56,18 +56,20 @@
                       name: 'NoticeDetail',
                       query: { test: 'test' },
                     }"
-                    >공지사항 제목 테스트 입니다.
+                    >{{ item.title }}
                   </router-link>
                 </p>
               </td>
               <td>
-                <span class="text-xs font-weight-bold"
-                  >공지사항 작성자 테스트 입니다.</span
-                >
+                <span class="text-xs font-weight-bold">{{
+                  item.contents
+                }}</span>
               </td>
               <td class="align-middle text-center">
                 <div class="d-flex align-items-center justify-content-center">
-                  <span class="me-2 text-xs font-weight-bold">2024-02-14</span>
+                  <span class="me-2 text-xs font-weight-bold">{{
+                    item.create_date
+                  }}</span>
                   <div></div>
                 </div>
               </td>
@@ -137,6 +139,7 @@
 </template>
 <script>
 import Paginate from "vuejs-paginate-next";
+import axios from "axios";
 export default {
   name: "projects-table",
 
@@ -146,6 +149,7 @@ export default {
       items: [],
       groupDetail: [],
       groupDetail2: [],
+      NotList: [],
       currentPage: 1,
       currentPage2: 1,
       pageSize: 5,
@@ -161,7 +165,16 @@ export default {
       grdNo: 1,
     };
   },
-  created() {},
+  created() {
+    axios
+      .post("/api/noticePage")
+      .then((res) => {
+        this.NotList = res.data;
+      })
+      .catch(function (error) {
+        alert("에러! API 요청에 오류가 있습니다. " + error);
+      });
+  },
   methods: {
     clickCallback() {},
   },
