@@ -21,7 +21,7 @@ Coded by www.creative-tim.com
     :custom_class="this.$store.state.mcolor"
     :class="[
       this.$store.state.isTransparent,
-      this.$store.state.isRTL ? 'fixed-end' : 'fixed-start'
+      this.$store.state.isRTL ? 'fixed-end' : 'fixed-start',
     ]"
     v-if="this.$store.state.showSidenav"
   />
@@ -37,12 +37,12 @@ Coded by www.creative-tim.com
       :minNav="navbarMinimize"
       v-if="this.$store.state.showNavbar"
     />
-    <router-view />
+    <router-view :key="$route.fullPath"></router-view>
     <configurator
       :toggle="toggleConfigurator"
       :class="[
         this.$store.state.showConfig ? 'show' : '',
-        this.$store.state.hideConfigButton ? 'd-none' : ''
+        this.$store.state.hideConfigButton ? 'd-none' : '',
       ]"
     />
   </main>
@@ -59,10 +59,9 @@ export default {
     Sidenav,
     Configurator,
     Navbar,
-
   },
   methods: {
-    ...mapMutations(["toggleConfigurator", "navbarMinimize"])
+    ...mapMutations(["toggleConfigurator", "navbarMinimize"]),
   },
   computed: {
     navClasses() {
@@ -73,12 +72,12 @@ export default {
           this.$store.state.isNavFixed && this.$store.state.darkMode,
         "position-absolute px-4 mx-0 w-100 z-index-2": this.$store.state
           .isAbsolute,
-        "px-0 mx-4": !this.$store.state.isAbsolute
+        "px-0 mx-4": !this.$store.state.isAbsolute,
       };
-    }
+    },
   },
   beforeMount() {
     this.$store.state.isTransparent = "bg-transparent";
-  }
+  },
 };
 </script>

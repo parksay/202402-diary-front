@@ -38,18 +38,29 @@
             <ul class="nav ms-4">
               <template v-for="i in list.nodeList" :key="i.folder_seq">
                 <li class="nav-item active">
-                  <a
-                    class="nav-link active"
-                    href=""
-                    @click="contentsMove($event, i.folder_seq, i.contents_seq)"
+                  <router-link
+                    :to="{
+                      name: 'Content',
+                      query: {
+                        folderSeq: i.folder_seq,
+                        contentsSeq: i.contents_seq,
+                      },
+                    }"
                   >
-                    <span class="sidenav-mini-icon"> </span>
-                    <span class="sidenav-normal"> {{ i.title }} </span>
-                  </a>
+                    <a class="nav-link active">
+                      <span class="sidenav-mini-icon"> </span>
+                      <span class="sidenav-normal"> {{ i.title }} </span>
+                    </a>
+                  </router-link>
                 </li>
               </template>
               <li class="nav-item">
-                <a class="nav-link" href="">
+                <a
+                  class="nav-link active"
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target="#ContentCreate"
+                >
                   <span class="sidenav-mini-icon"> C </span>
                   <span class="sidenav-normal"> + 신규글쓰기 </span>
                 </a>
@@ -225,10 +236,69 @@
       </div>
     </div>
   </div>
+
+  <!-- 신규 글 작성 Modal -->
+  <div class="col-md-4">
+    <div
+      class="modal fade"
+      id="ContentCreate"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalSignTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+          <div class="modal-body p-0">
+            <div class="card card-plain">
+              <div class="card-header pb-0 text-left">
+                <h3 class="font-weight-bolder text-primary text-gradient">
+                  신규글 생성
+                </h3>
+              </div>
+              <div class="card-body pb-3">
+                <form role="form text-left">
+                  <label>글 제목</label>
+                  <div class="input-group mb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="글 제목"
+                      aria-label="글 제목"
+                      aria-describedby="name-addon"
+                      v-model="title"
+                    />
+                  </div>
+                  <label>글 내용</label>
+                  <div class="input-group mb-3">
+                    <textarea
+                      class="form-control"
+                      placeholder="글 내용"
+                      aria-label="With textarea"
+                      v-model="contents"
+                      style="height: 300px; resize: none"
+                    ></textarea>
+                  </div>
+                  <div class="text-center">
+                    <button
+                      data-bs-dismiss="modal"
+                      type="button"
+                      class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0"
+                      @click="ContentCreate()"
+                    >
+                      글 작성
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
-import axios from "axios";
-
 export default {
   name: "SidenavList",
   props: {
@@ -243,6 +313,10 @@ export default {
       pfolderSeq: "",
       pfolderName: "",
       isActive: "active",
+
+      // 글 관련 데이터
+      title: "",
+      contents: "",
     };
   },
   components: {},
@@ -258,10 +332,10 @@ export default {
       let vm = this;
       let params = new URLSearchParams();
       params.append("member_seq", this.member_seq);
-      axios
+      this.axios
         .post("/api/folderView", params)
         .then((response) => {
-          console.log(JSON.stringify(response));
+          // console.log(JSON.stringify(response));
           vm.folderInfo = response.data;
         })
         .catch(function (error) {
@@ -275,7 +349,7 @@ export default {
       params.append("folder_name", this.folder_Name);
 
       if (this.folder_Name != null) {
-        axios
+        this.axios
           .post("/api/folderCreate", params)
           .then((response) => {
             console.log(JSON.stringify(response));
@@ -290,7 +364,7 @@ export default {
       }
     },
     folderSeq: function (folderSeq, folderName) {
-      console.table(folderSeq + " " + folderName);
+      // console.table(folderSeq + " " + folderName);
       this.PfolderSeq = folderSeq;
       this.mod_folder_Name = folderName;
     },
@@ -301,7 +375,7 @@ export default {
       params.append("folder_name", this.mod_folder_Name);
       params.append("stat", stat);
       if (this.folder_Name != null) {
-        axios
+        this.axios
           .post("/api/folderModify", params)
           .then((response) => {
             console.log(JSON.stringify(response));
@@ -315,25 +389,33 @@ export default {
         alert("에러 폴더명을 입력해주세요.");
       }
     },
-    contentsMove: function (e, folderSeq, contentsSeq) {
-      e.preventDefault();
-      console.log(folderSeq, contentsSeq);
-      console.log(
-        "store : " +
-          this.$store.state.folderSeq +
-          " " +
-          this.$store.state.contentsSeq
-      );
-      //prop 에 담고 api 호출
-      this.$store.state.folderSeq = folderSeq;
-      this.$store.state.contentsSeq = contentsSeq;
-      console.log(
-        "store : " +
-          this.$store.state.folderSeq +
-          " " +
-          this.$store.state.contentsSeq
-      );
-    },
+    // contentsMove: function (e, folderSeq, contentsSeq) {
+    // e.preventDefault();
+
+    // this.$router.push({
+    //   name: "Content",
+    //   query: { folderSeq: folderSeq, contentsSeq: contentsSeq },
+
+    // });
+    // this.$router.go();
+
+    // console.log(folderSeq, contentsSeq);
+    // console.log(
+    //   "store : " +
+    //     this.$store.state.folderSeq +
+    //     " " +
+    //     this.$store.state.contentsSeq
+    // );
+    // //prop 에 담고 api 호출
+    // this.$store.state.folderSeq = folderSeq;
+    // this.$store.state.contentsSeq = contentsSeq;
+    // console.log(
+    //   "store : " +
+    //     this.$store.state.folderSeq +
+    //     " " +
+    //     this.$store.state.contentsSeq
+    // );
+    // },
   },
 };
 </script>
