@@ -227,8 +227,6 @@
   </div>
 </template>
 <script>
-import axios from "axios";
-
 export default {
   name: "SidenavList",
   props: {
@@ -258,7 +256,7 @@ export default {
       let vm = this;
       let params = new URLSearchParams();
       params.append("member_seq", this.member_seq);
-      axios
+      this.axios
         .post("/api/folderView", params)
         .then((response) => {
           console.log(JSON.stringify(response));
@@ -275,7 +273,7 @@ export default {
       params.append("folder_name", this.folder_Name);
 
       if (this.folder_Name != null) {
-        axios
+        this.axios
           .post("/api/folderCreate", params)
           .then((response) => {
             console.log(JSON.stringify(response));
@@ -301,7 +299,7 @@ export default {
       params.append("folder_name", this.mod_folder_Name);
       params.append("stat", stat);
       if (this.folder_Name != null) {
-        axios
+        this.axios
           .post("/api/folderModify", params)
           .then((response) => {
             console.log(JSON.stringify(response));
