@@ -11,11 +11,16 @@
                     <h6>{{ item.title }}</h6>
                     <h6>{{ item.contents_seq }}</h6>
                   </template>
+
+                  <h6>{{ folderSeq }}</h6>
+                  <h6>{{ contentsSeq }}</h6>
                 </div>
                 <div class="ms-auto text-end" style="margin: 5px">
                   <a
                     class="btn btn-link text-dark px-3 mb-0"
-                    href="javascript:;"
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#ContentUpdate"
                   >
                     <i
                       class="fas fa-pencil-alt text-dark me-2"
@@ -34,8 +39,68 @@
             </div>
           </div>
           <!-- 최근작성한 글  -->
-          <div class="col-lg-4 mb-lg">
+          <!-- <div class="col-lg-4 mb-lg">
             <TransactionCard></TransactionCard>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 신규 글 작성 Modal -->
+  <div class="col-md-4">
+    <div
+      class="modal fade"
+      id="ContentUpdate"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalSignTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+          <div class="modal-body p-0">
+            <div class="card card-plain">
+              <div class="card-header pb-0 text-left">
+                <h3 class="font-weight-bolder text-primary text-gradient">
+                  글 수정
+                </h3>
+              </div>
+              <div class="card-body pb-3">
+                <form role="form text-left">
+                  <label>글 제목</label>
+                  <div class="input-group mb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="글 제목"
+                      aria-label="글 제목"
+                      aria-describedby="name-addon"
+                      v-model="title"
+                    />
+                  </div>
+                  <label>글 내용</label>
+                  <div class="input-group mb-3">
+                    <textarea
+                      class="form-control"
+                      placeholder="글 내용"
+                      aria-label="With textarea"
+                      v-model="contents"
+                      style="height: 300px; resize: none"
+                    ></textarea>
+                  </div>
+                  <div class="text-center">
+                    <button
+                      data-bs-dismiss="modal"
+                      type="button"
+                      class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0"
+                      @click="ContentUpdate()"
+                    >
+                      글 수정
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -45,22 +110,29 @@
 
 <script>
 import axios from "axios";
-import TransactionCard from "./components/TransactionCard.vue";
+// import TransactionCard from "./components/TransactionCard.vue";
 
 export default {
-  data: function () {
+  data() {
     return {
       items: [],
       title: "글제목을 입력",
       sch_title: "확인용데이터",
-      contents: "",
+      folderSeq: "",
+      contentsSeq: "",
     };
   },
   components: {
-    TransactionCard,
+    // TransactionCard,
   },
-  mounted() {
+  created() {
     // this.search();
+
+    // 글 조회에 필요한 데이터
+    console.log("folderSeq ---> ", this.$route.query.folderSeq);
+    console.log("contentsSeq ---> ", this.$route.query.contentsSeq);
+    this.folderSeq = this.$route.query.folderSeq;
+    this.contentsSeq = this.$route.query.contentsSeq;
   },
   methods: {
     search: function () {

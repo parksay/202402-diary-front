@@ -35,8 +35,6 @@ export default {
     TransactionCard,
   },
 
-  created() {},
-
   beforeMount() {
     this.$store.state.showNavbar = true;
     this.$store.state.showSidenav = true;
