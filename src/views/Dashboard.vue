@@ -24,8 +24,6 @@ import Calendar from "@/examples/Calendar.vue";
 import TransactionCard from "./components/TransactionCard.vue";
 </script>
 <script>
-// import axios from "axios";
-
 export default {
   data() {
     return {
@@ -37,13 +35,7 @@ export default {
     TransactionCard,
   },
 
-  created() {
-    console.log("2@##$#");
-    this.axios.post("/api/test").then((res) => {
-      alert("axios 확인용");
-      this.testData = res.data;
-    });
-  },
+  created() {},
 
   beforeMount() {
     this.$store.state.showNavbar = true;
