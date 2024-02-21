@@ -7,7 +7,7 @@
       <li class="text-sm breadcrumb-item">
         <a
         :class="this.$store.state.isNavFixed ? 'text-dark' : 'text-white'"
-         class="opacity-8">홍길동</a>
+        class="opacity-8">{{ this.$store.state.loginInfo ? this.$store.state.loginInfo.loginID : '홍길동' }}</a>
       </li>
       <li
         class="text-sm breadcrumb-item active"

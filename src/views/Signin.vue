@@ -54,7 +54,7 @@
                         color="success"
                         fullWidth
                         size="lg"
-                        v-on:click="helloworld"
+                        v-on:click="onclickLogin"
                         >Sign in</argon-button
                       >
                     </div>
@@ -70,6 +70,12 @@
                       회원가입
                     </router-link>
                   </p>
+                </div>
+                <div>
+                  <button 
+                  v-on:click="testHandler"
+                  >test button</button>
+
                 </div>
               </div>
             </div>
@@ -132,16 +138,24 @@ export default {
     this.$store.state.showFooter = true;
     body.classList.add("bg-gray-100");
   },
+  mounted: function () {
+    alert('hello world');
+    this.axios.defaults.headers.common["Authorization"] = null;
+    localStorage.setItem('accessToken', null);
+    localStorage.setItem('refreshToken', null);
+    localStorage.setItem('expireTime', null);
+    this.$store.state.loginInfo = null;
+  },
   data: function() {
     return {
       param: {
-        loginID: 'hello',
-        password: 'world',
+        loginID: 'apple1',
+        password: 'apple2',
       },
     };
   },
   methods: {
-    helloworld: function() {
+    onclickLogin: function() {
       let vm = this;
       this.axios(
         { 
@@ -151,16 +165,37 @@ export default {
         }, {
           headers: { "Content-Type": "application/json" },
         }).then((response) => {
-          console.log(response);
-          console.log(response.data);
+          if(!response.data.result) {
+            alert('아이디 또는 비밀번호를 확인해 주세요');
+            return;
+          } 
+          this.axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.accessToken}`;
+          localStorage.setItem('accessToken', response.data.accessToken);
+          localStorage.setItem('refreshToken', response.data.refreshToken);
+          localStorage.setItem('expireTime', response.data.expireTime);
+          this.$store.state.loginInfo = {
+            accessToken: response.data.accessToken, 
+            refreshToken: response.data.refreshToken,
+            memberSeq: response.data.memberSeq, 
+            loginID: response.data.loginID, 
+            name: response.data.name, 
+            expireTime: response.data.expireTime, 
+          };
+
+          // location.replace('/');
         }).catch((err) => {
-          console.log(err.response);
+          console.log(err);
         });
     },
     inputHandler: function(e) {
       let vm = this;
       const targetName = e.target.name;
       vm.param[targetName] = e.target.value;
+    },
+    testHandler: function() {
+      console.log(localStorage.getItem('accessToken'));
+      console.log(this.$store.state.loginInfo);
+      console.log(this.$store.state.loginInfo.loginID);
     }
   },
 };
