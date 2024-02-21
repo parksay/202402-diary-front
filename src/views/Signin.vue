@@ -71,12 +71,6 @@
                     </router-link>
                   </p>
                 </div>
-                <div>
-                  <button 
-                  v-on:click="testHandler"
-                  >test button</button>
-
-                </div>
               </div>
             </div>
             <div
@@ -139,7 +133,6 @@ export default {
     body.classList.add("bg-gray-100");
   },
   mounted: function () {
-    alert('hello world');
     this.axios.defaults.headers.common["Authorization"] = null;
     localStorage.setItem('accessToken', null);
     localStorage.setItem('refreshToken', null);
@@ -149,8 +142,8 @@ export default {
   data: function() {
     return {
       param: {
-        loginID: 'apple1',
-        password: 'apple2',
+        loginID: '',
+        password: '',
       },
     };
   },
@@ -166,7 +159,7 @@ export default {
           headers: { "Content-Type": "application/json" },
         }).then((response) => {
           if(!response.data.result) {
-            alert('아이디 또는 비밀번호를 확인해 주세요');
+            alert('아이디와 비밀번호를 확인해 주세요');
             return;
           } 
           this.axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.accessToken}`;
@@ -181,8 +174,7 @@ export default {
             name: response.data.name, 
             expireTime: response.data.expireTime, 
           };
-
-          // location.replace('/');
+          this.$router.push("/");
         }).catch((err) => {
           console.log(err);
         });
@@ -194,6 +186,9 @@ export default {
     },
     testHandler: function() {
       console.log(localStorage.getItem('accessToken'));
+      console.log(this.$store.state);
+      console.log(this.$route);
+      
       console.log(this.$store.state.loginInfo);
       console.log(this.$store.state.loginInfo.loginID);
     }
