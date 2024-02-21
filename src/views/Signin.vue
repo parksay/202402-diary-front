@@ -24,21 +24,25 @@
                   <p class="mb-0">Enter your email and password to sign in</p>
                 </div>
                 <div class="card-body">
-                  <form role="form">
+                  <div>
                     <div class="mb-3">
                       <argon-input
-                        type="email"
-                        placeholder="Email"
-                        name="email"
+                        type="text"
+                        placeholder="ID"
+                        name="loginID"
                         size="lg"
+                        v-on:input="inputHandler"
+                        v-model:value="param.loginID"
                       />
                     </div>
                     <div class="mb-3">
                       <argon-input
                         type="password"
-                        placeholder="Password"
+                        placeholder="PASSWORD"
                         name="password"
                         size="lg"
+                        v-on:input="inputHandler"
+                        v-model:value="param.password"
                       />
                     </div>
                     <argon-switch id="rememberMe">Remember me</argon-switch>
@@ -50,10 +54,11 @@
                         color="success"
                         fullWidth
                         size="lg"
+                        v-on:click="helloworld"
                         >Sign in</argon-button
                       >
                     </div>
-                  </form>
+                  </div>
                 </div>
                 <div class="px-1 pt-0 text-center card-footer px-lg-2">
                   <p class="mx-auto mb-4 text-sm">
@@ -102,6 +107,7 @@ import Navbar from "@/examples/PageLayout/Navbar.vue";
 import ArgonInput from "@/components/ArgonInput.vue";
 import ArgonSwitch from "@/components/ArgonSwitch.vue";
 import ArgonButton from "@/components/ArgonButton.vue";
+
 const body = document.getElementsByTagName("body")[0];
 
 export default {
@@ -125,6 +131,37 @@ export default {
     this.$store.state.showSidenav = true;
     this.$store.state.showFooter = true;
     body.classList.add("bg-gray-100");
+  },
+  data: function() {
+    return {
+      param: {
+        loginID: 'hello',
+        password: 'world',
+      },
+    };
+  },
+  methods: {
+    helloworld: function() {
+      let vm = this;
+      this.axios(
+        { 
+          url: "/api/auth/login", 
+          data: vm.param, 
+          method: "post" 
+        }, {
+          headers: { "Content-Type": "application/json" },
+        }).then((response) => {
+          console.log(response);
+          console.log(response.data);
+        }).catch((err) => {
+          console.log(err.response);
+        });
+    },
+    inputHandler: function(e) {
+      let vm = this;
+      const targetName = e.target.name;
+      vm.param[targetName] = e.target.value;
+    }
   },
 };
 </script>
