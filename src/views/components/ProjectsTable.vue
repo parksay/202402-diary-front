@@ -4,6 +4,7 @@
       <h6>공지사항</h6>
       <span style="display: flex; justify-content: flex-end">
         <a
+          v-if="this.$store.state.loginInfo.loginID === 'admin'"
           class="btn btn-success"
           type="button"
           data-bs-toggle="modal"
@@ -175,6 +176,7 @@ export default {
     };
   },
   created() {
+    console.log(this.$store.state.loginInfo.loginID);
     this.axios
       .post("/api/noticePage")
       .then((res) => {
@@ -187,8 +189,6 @@ export default {
       .post("/api/maxSEQ")
       .then((res) => {
         this.notice_seq = res.data + 1;
-        console.log(res.data, "res");
-        console.log(this.notice_seq, "seq");
       })
       .catch(function (error) {
         alert("에러! API 요청에 오류가 있습니다. " + error);
@@ -198,7 +198,6 @@ export default {
       .post("/api/minSEQ")
       .then((res) => {
         this.minSeq = res.data;
-        console.log(this.minSeq);
       })
       .catch(function (error) {
         alert("에러! API 요청에 오류가 있습니다123. " + error);
@@ -208,7 +207,6 @@ export default {
       .post("/api/count")
       .then((res) => {
         this.count = res.data + 1;
-        console.log(this.count);
       })
       .catch(function (error) {
         alert("에러! API 요청에 오류가 있습니다. " + error);
@@ -222,14 +220,13 @@ export default {
           notice_seq: this.minSeq,
           title: this.title,
           contents: this.contents,
-          member_seq: 1,
+          member_seq: this.$store.state.loginInfo.member_seq,
           user_status: 1,
         };
         console.log(param, "if");
         this.axios
           .post("/api/noticeDelete", param)
           .then((res) => {
-            console.log("삭제됨", res.data);
             if (res.data == 1) {
               alert("작성되었습니다");
               location.reload();
@@ -250,7 +247,6 @@ export default {
       this.axios
         .post("/api/noticeWrite", param)
         .then((res) => {
-          console.log("확인이이이이@@@", res.data);
           if (res.data == 1) {
             alert("작성되었습니다");
             location.reload();

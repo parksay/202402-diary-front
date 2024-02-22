@@ -29,6 +29,7 @@
                     </a>
                   </router-link>
                   <a
+                    v-if="this.$store.state.loginInfo.loginID === 'admin'"
                     class="btn btn-link text-dark px-3 mb-0"
                     type="button"
                     data-bs-toggle="modal"
@@ -41,6 +42,7 @@
                     >수정
                   </a>
                   <a
+                    v-if="this.$store.state.loginInfo.loginID === 'admin'"
                     class="btn btn-link text-danger text-gradient px-3 mb-0"
                     type="button"
                     @click="deletNotice()"
