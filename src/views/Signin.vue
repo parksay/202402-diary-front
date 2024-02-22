@@ -189,11 +189,11 @@ export default {
     },
     testHandler: function () {
       //  <button v-on:click="testHandler">test button</button>
-      const loginInfo = this.getLoginInfo();
+      const loginInfo = this.$globalFunctions.getLoginInfo();
       console.log(loginInfo);
       const loginID = loginInfo.loginID;
       console.log(loginID);
-      const memberSeq = loginInfo.memberSeq;
+      const memberSeq = this.$globalFunctions.getLoginInfo().memberSeq;
       console.log(memberSeq);
     },
   },
