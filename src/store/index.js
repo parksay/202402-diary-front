@@ -20,8 +20,12 @@ export default createStore({
     layout: "default",
     folderSeq: "",
     contentsSeq: "",
+    loginInfo: null,
   },
   mutations: {
+    MU_LOGIN(state, data) {
+      state.loginInfo = data;
+    },
     toggleConfigurator(state) {
       state.showConfig = !state.showConfig;
     },

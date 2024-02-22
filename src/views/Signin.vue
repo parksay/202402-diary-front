@@ -33,6 +33,7 @@
                         size="lg"
                         v-on:input="inputHandler"
                         v-model:value="param.loginID"
+                        @keyup.enter="onclickLogin"
                       />
                     </div>
                     <div class="mb-3">
@@ -43,6 +44,7 @@
                         size="lg"
                         v-on:input="inputHandler"
                         v-model:value="param.password"
+                        @keyup.enter="onclickLogin"
                       />
                     </div>
                     <argon-switch id="rememberMe">Remember me</argon-switch>
@@ -134,64 +136,81 @@ export default {
   },
   mounted: function () {
     this.axios.defaults.headers.common["Authorization"] = null;
-    localStorage.setItem('accessToken', null);
-    localStorage.setItem('refreshToken', null);
-    localStorage.setItem('expireTime', null);
+    localStorage.setItem("accessToken", null);
+    localStorage.setItem("refreshToken", null);
+    localStorage.setItem("expireTime", null);
     this.$store.state.loginInfo = null;
+    localStorage.clear();
   },
-  data: function() {
+  data: function () {
     return {
       param: {
-        loginID: '',
-        password: '',
+        loginID: "",
+        password: "",
       },
     };
   },
   methods: {
-    onclickLogin: function() {
+    onclickLogin: function () {
       let vm = this;
       this.axios(
-        { 
-          url: "/api/auth/login", 
-          data: vm.param, 
-          method: "post" 
-        }, {
+        {
+          url: "/api/auth/login",
+          data: vm.param,
+          method: "post",
+        },
+        {
           headers: { "Content-Type": "application/json" },
-        }).then((response) => {
-          if(!response.data.result) {
-            alert('아이디와 비밀번호를 확인해 주세요');
+        }
+      )
+        .then((response) => {
+          if (!response.data.result) {
+            alert("아이디와 비밀번호를 확인해 주세요");
             return;
-          } 
-          this.axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.accessToken}`;
-          localStorage.setItem('accessToken', response.data.accessToken);
-          localStorage.setItem('refreshToken', response.data.refreshToken);
-          localStorage.setItem('expireTime', response.data.expireTime);
-          this.$store.state.loginInfo = {
-            accessToken: response.data.accessToken, 
+          }
+          this.axios.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${response.data.accessToken}`;
+          localStorage.setItem("accessToken", response.data.accessToken);
+          localStorage.setItem("refreshToken", response.data.refreshToken);
+          localStorage.setItem("expireTime", response.data.expireTime);
+
+          // this.$store.state.loginInfo = {
+          //   accessToken: response.data.accessToken,
+          //   refreshToken: response.data.refreshToken,
+          //   memberSeq: response.data.memberSeq,
+          //   loginID: response.data.loginID,
+          //   name: response.data.name,
+          //   expireTime: response.data.expireTime,
+          // };
+
+          this.$store.commit("MU_LOGIN", {
+            accessToken: response.data.accessToken,
             refreshToken: response.data.refreshToken,
-            memberSeq: response.data.memberSeq, 
-            loginID: response.data.loginID, 
-            name: response.data.name, 
-            expireTime: response.data.expireTime, 
-          };
+            memberSeq: response.data.memberSeq,
+            loginID: response.data.loginID,
+            name: response.data.name,
+            expireTime: response.data.expireTime,
+          });
           this.$router.push("/");
-        }).catch((err) => {
+        })
+        .catch((err) => {
           console.log(err);
         });
     },
-    inputHandler: function(e) {
+    inputHandler: function (e) {
       let vm = this;
       const targetName = e.target.name;
       vm.param[targetName] = e.target.value;
     },
-    testHandler: function() {
-      console.log(localStorage.getItem('accessToken'));
+    testHandler: function () {
+      console.log(localStorage.getItem("accessToken"));
       console.log(this.$store.state);
       console.log(this.$route);
-      
+
       console.log(this.$store.state.loginInfo);
       console.log(this.$store.state.loginInfo.loginID);
-    }
+    },
   },
 };
 </script>
