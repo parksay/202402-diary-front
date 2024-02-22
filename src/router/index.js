@@ -8,7 +8,6 @@ import Profile from "../views/Profile.vue";
 import Signup from "../views/Signup.vue";
 import Signin from "../views/Signin.vue";
 import NoticeDetail from "../views/NoticeDetail.vue";
-import NoticeWrite from "../views/NoticeWrite.vue";
 import Content from "../views/Content.vue";
 
 const routes = [
@@ -58,11 +57,7 @@ const routes = [
     name: "NoticeDetail",
     component: NoticeDetail,
   },
-  {
-    path: "/NoticeWrite",
-    name: "NoticeWrite",
-    component: NoticeWrite,
-  },
+
   {
     path: "/Content",
     name: "Content",

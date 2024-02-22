@@ -2,15 +2,17 @@
   <div class="card mb-4">
     <div class="card-header pb-0">
       <h6>공지사항</h6>
-      <router-link
-        :to="{
-          name: 'NoticeWrite',
-        }"
-      >
-        <span style="display: flex; justify-content: flex-end">
-          <button type="button" class="btn btn-success">등록</button></span
-        ></router-link
-      >
+      <span style="display: flex; justify-content: flex-end">
+        <a
+          class="btn btn-success"
+          type="button"
+          data-bs-toggle="modal"
+          data-bs-target="#ContentUpdate"
+        >
+          <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i
+          >등록
+        </a>
+      </span>
     </div>
     <div class="card-body px-0 pt-0 pb-2">
       <div class="table-responsive p-0">
@@ -45,7 +47,7 @@
               <td>
                 <div class="d-flex px-3">
                   <div class="my-auto">
-                    <h6 class="mb-0 text-sm">{{ item.notice_seq }}</h6>
+                    <h6 class="mb-0 text-sm">{{ item.rowNum }}</h6>
                   </div>
                 </div>
               </td>
@@ -54,7 +56,7 @@
                   <router-link
                     :to="{
                       name: 'NoticeDetail',
-                      query: { test: 'test' },
+                      query: { notice_seq: item.notice_seq },
                     }"
                     >{{ item.title }}
                   </router-link>
@@ -78,72 +80,74 @@
         </table>
         <div
           style="display: flex; justify-content: space-around; margin-top: 5%"
-        >
-          <nav aria-label="Page navigation example">
-            <ul class="pagination">
-              <li class="page-item">
-                <a
-                  class="page-link"
-                  href="#"
-                  aria-label="Previous"
-                  style="color: #8392ab !important"
-                >
-                  <i class="fa fa-angle-left"></i>
-                  <span class="sr-only">Previous</span>
-                </a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" style="color: #8392ab !important" href="#"
-                  >1</a
-                >
-              </li>
-              <li class="page-item">
-                <a class="page-link" style="color: #8392ab !important" href="#"
-                  >2</a
-                >
-              </li>
-              <li class="page-item">
-                <a class="page-link" style="color: #8392ab !important" href="#"
-                  >3</a
-                >
-              </li>
-              <li class="page-item">
-                <a
-                  class="page-link"
-                  href="#"
-                  aria-label="Next"
-                  style="color: #8392ab !important"
-                >
-                  <i class="fa fa-angle-right"></i>
-                  <span class="sr-only">Next</span>
-                </a>
-              </li>
-            </ul>
-          </nav>
+        ></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div
+      class="modal fade"
+      id="ContentUpdate"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalSignTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+          <div class="modal-body p-0">
+            <div class="card card-plain">
+              <div class="card-header pb-0 text-left">
+                <h3 class="font-weight-bolder text-primary text-gradient">
+                  공지사항 작성
+                </h3>
+              </div>
+              <div class="card-body pb-3">
+                <form role="form text-left">
+                  <label>글 제목</label>
+                  <div class="input-group mb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="공지사항 제목을 작성 하세요."
+                      aria-label="title"
+                      aria-describedby="name-addon"
+                      v-model="title"
+                    />
+                  </div>
+                  <label>글 내용</label>
+                  <div class="input-group mb-3">
+                    <textarea
+                      class="form-control"
+                      aria-label="With textarea"
+                      placeholder="공지사항 내용을 작성 하세요."
+                      v-model="contents"
+                      style="height: 300px; resize: none"
+                    ></textarea>
+                  </div>
+                  <div class="text-center">
+                    <button
+                      data-bs-dismiss="modal"
+                      type="button"
+                      class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0"
+                      @click="noticeWrite()"
+                    >
+                      글 작성
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
-        <paginate
-          class="justify-content-center"
-          v-model="currentPage"
-          :page-count="totalPage"
-          :page-range="5"
-          :margin-pages="0"
-          :click-handler="clickCallback"
-          :prev-text="'Prev'"
-          :next-text="'Next'"
-          :container-class="'pagination'"
-          :page-class="'page-item'"
-        ></paginate>
       </div>
     </div>
   </div>
 </template>
 <script>
-import Paginate from "vuejs-paginate-next";
-import axios from "axios";
 export default {
   name: "projects-table",
 
-  components: { paginate: Paginate },
   data() {
     return {
       items: [],
@@ -163,10 +167,15 @@ export default {
       groupCode: "",
       countShow: true,
       grdNo: 1,
+      title: "",
+      contents: "",
+      notice_seq: "",
+      count: "",
+      minSeq: "",
     };
   },
   created() {
-    axios
+    this.axios
       .post("/api/noticePage")
       .then((res) => {
         this.NotList = res.data;
@@ -174,9 +183,83 @@ export default {
       .catch(function (error) {
         alert("에러! API 요청에 오류가 있습니다. " + error);
       });
+    this.axios
+      .post("/api/maxSEQ")
+      .then((res) => {
+        this.notice_seq = res.data + 1;
+        console.log(res.data, "res");
+        console.log(this.notice_seq, "seq");
+      })
+      .catch(function (error) {
+        alert("에러! API 요청에 오류가 있습니다. " + error);
+      });
+
+    this.axios
+      .post("/api/minSEQ")
+      .then((res) => {
+        this.minSeq = res.data;
+        console.log(this.minSeq);
+      })
+      .catch(function (error) {
+        alert("에러! API 요청에 오류가 있습니다123. " + error);
+      });
+
+    this.axios
+      .post("/api/count")
+      .then((res) => {
+        this.count = res.data + 1;
+        console.log(this.count);
+      })
+      .catch(function (error) {
+        alert("에러! API 요청에 오류가 있습니다. " + error);
+      });
   },
   methods: {
     clickCallback() {},
+    noticeWrite() {
+      if (this.count > 11) {
+        let param = {
+          notice_seq: this.minSeq,
+          title: this.title,
+          contents: this.contents,
+          member_seq: 1,
+          user_status: 1,
+        };
+        console.log(param, "if");
+        this.axios
+          .post("/api/noticeDelete", param)
+          .then((res) => {
+            console.log("삭제됨", res.data);
+            if (res.data == 1) {
+              alert("작성되었습니다");
+              location.reload();
+            }
+          })
+          .catch(function (error) {
+            alert("에러! API 요청에 오류가 있습니다. " + error);
+          });
+      }
+      let param = {
+        notice_seq: this.notice_seq,
+        title: this.title,
+        contents: this.contents,
+        member_seq: 1,
+        user_status: 1,
+      };
+      console.log(param, "else");
+      this.axios
+        .post("/api/noticeWrite", param)
+        .then((res) => {
+          console.log("확인이이이이@@@", res.data);
+          if (res.data == 1) {
+            alert("작성되었습니다");
+            location.reload();
+          }
+        })
+        .catch(function (error) {
+          alert("에러! API 요청에 오류가 있습니다. " + error);
+        });
+    },
   },
 };
 </script>
