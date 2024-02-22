@@ -7,13 +7,8 @@
             <div class="card z-index-1">
               <div class="card">
                 <div class="p-3 card-body" style="width: 60%; height: 600px">
-                  <template v-for="item in items" :key="item.contents_seq">
-                    <h6>{{ item.title }}</h6>
-                    <h6>{{ item.contents_seq }}</h6>
-                  </template>
-
-                  <h6>{{ folderSeq }}</h6>
-                  <h6>{{ contentsSeq }}</h6>
+                  <h6>{{ item.title }}</h6>
+                  <h6>{{ item.contents }}</h6>
                 </div>
                 <div class="ms-auto text-end" style="margin: 5px">
                   <a
@@ -21,6 +16,7 @@
                     type="button"
                     data-bs-toggle="modal"
                     data-bs-target="#ContentUpdate"
+                    @click="search()"
                   >
                     <i
                       class="fas fa-pencil-alt text-dark me-2"
@@ -72,19 +68,18 @@
                     <input
                       type="text"
                       class="form-control"
-                      placeholder="글 제목"
+                      placeholder="modal_title"
                       aria-label="글 제목"
                       aria-describedby="name-addon"
-                      v-model="title"
+                      v-model="modal_title"
                     />
                   </div>
                   <label>글 내용</label>
                   <div class="input-group mb-3">
                     <textarea
                       class="form-control"
-                      placeholder="글 내용"
                       aria-label="With textarea"
-                      v-model="contents"
+                      v-model="modal_contents"
                       style="height: 300px; resize: none"
                     ></textarea>
                   </div>
@@ -93,7 +88,7 @@
                       data-bs-dismiss="modal"
                       type="button"
                       class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0"
-                      @click="ContentUpdate()"
+                      @click="contentUpdate()"
                     >
                       글 수정
                     </button>
@@ -109,59 +104,85 @@
 </template>
 
 <script>
-import axios from "axios";
-// import TransactionCard from "./components/TransactionCard.vue";
+//import EventBus from "../EeventBus"; // 생성한 EventBus
+//import { EventBus } from "../../EventBus";
 
 export default {
   data() {
     return {
-      items: [],
-      title: "글제목을 입력",
-      sch_title: "확인용데이터",
+      item: {},
+      modal_title: "",
+      modal_contents: "",
       folderSeq: "",
       contentsSeq: "",
+      memberSeq: "",
+      action: "",
     };
   },
   components: {
     // TransactionCard,
   },
   created() {
-    // this.search();
-
-    // 글 조회에 필요한 데이터
-    console.log("folderSeq ---> ", this.$route.query.folderSeq);
-    console.log("contentsSeq ---> ", this.$route.query.contentsSeq);
-    this.folderSeq = this.$route.query.folderSeq;
-    this.contentsSeq = this.$route.query.contentsSeq;
+    this.search();
   },
   methods: {
     search: function () {
-      //alert('search');
-
       let vm = this;
+      let contentsSeq = this.$route.query.contentsSeq;
 
-      let params = new URLSearchParams();
-      params.append("title", this.sch_title);
+      let params = {
+        contents_seq: contentsSeq,
+        folder_seq: this.$route.query.folderSeq,
+        member_seq: this.$route.query.memberSeq,
+      };
 
-      axios
-        .post("/api/contentsList", params)
+      this.axios
+        .post("/api/contentsDetail", params)
         .then(function (response) {
-          console.log(response.data.contents);
-          vm.items = response.data.contents;
+          vm.modal_contents = response.data.contents;
+          vm.modal_title = response.data.title;
+          vm.item = response.data;
         })
         .catch(function (error) {
+          console.log(error);
+          if (error.response.status < 500) {
+            return;
+          }
           alert("에러! API 요청에 오류가 있습니다. " + error);
         });
+    },
+    //글 수정
+    contentUpdate: function () {
+      let params = {
+        contents_seq: this.$route.query.contentsSeq,
+        folder_seq: this.$route.query.folderSeq,
+        member_seq: this.$route.query.memberSeq,
+        title: this.modal_title,
+        contents: this.modal_contents,
+        action: "U",
+      };
 
-      // axios
-      //   .post('/api/system/contentsListvue.do', params)
-      //   .then(function (response) {
-      //     console.log(response.data.contents);
-      //     vm.items = response.data.contents;
-      //   })
-      //   .catch(function (error) {
-      //     alert('에러! API 요청에 오류가 있습니다. ' + error);
-      //   });
+      console.log("params==>" + params);
+      let vm = this;
+
+      this.axios
+        .post("/api/contentsSave", params)
+        .then(() => {
+          console.log("글이 성공적으로 수정되었습니다.");
+          alert("글이 성공적으로 수정되었습니다.");
+          vm.search();
+
+          // this.item = {
+          //   modal_title: this.modal_title,
+          //   modal_contents: this.modal_contents
+          // };
+        })
+        .catch(function (error) {
+          if (error.response.status < 500) {
+            return;
+          }
+          console.error("글 수정 중 오류가 발생했습니다.", error);
+        });
     },
   },
 };
