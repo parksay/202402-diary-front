@@ -2,9 +2,11 @@
   <div class="card mb-4">
     <div class="card-header pb-0">
       <h6>공지사항</h6>
-      <span style="display: flex; justify-content: flex-end">
+      <span
+        v-if="this.loginStatus != null"
+        style="display: flex; justify-content: flex-end"
+      >
         <a
-          v-if="this.$store.state.loginInfo.loginID === 'admin'"
           class="btn btn-success"
           type="button"
           data-bs-toggle="modal"
@@ -64,9 +66,7 @@
                 </p>
               </td>
               <td>
-                <span class="text-xs font-weight-bold">{{
-                  item.contents
-                }}</span>
+                <span class="text-xs font-weight-bold">{{ item.loginID }}</span>
               </td>
               <td class="align-middle text-center">
                 <div class="d-flex align-items-center justify-content-center">
@@ -173,10 +173,16 @@ export default {
       notice_seq: "",
       count: "",
       minSeq: "",
+      loginID: "",
+      loginStatus: null,
     };
   },
   created() {
-    console.log(this.$store.state.loginInfo.loginID);
+    if (this.$store.state.loginInfo) {
+      if (this.$store.state.loginInfo.loginID == "admin") {
+        this.loginStatus = this.$store.state.loginInfo.loginID;
+      }
+    }
     this.axios
       .post("/api/noticePage")
       .then((res) => {
@@ -206,7 +212,7 @@ export default {
     this.axios
       .post("/api/count")
       .then((res) => {
-        this.count = res.data + 1;
+        this.count = res.data;
       })
       .catch(function (error) {
         alert("에러! API 요청에 오류가 있습니다. " + error);
@@ -215,7 +221,7 @@ export default {
   methods: {
     clickCallback() {},
     noticeWrite() {
-      if (this.count > 11) {
+      if (this.count > 9) {
         let param = {
           notice_seq: this.minSeq,
           title: this.title,
@@ -256,6 +262,14 @@ export default {
           alert("에러! API 요청에 오류가 있습니다. " + error);
         });
     },
+  },
+  beforeMount() {
+    this.$store.state.showNavbar = true;
+    this.$store.state.showSidenav = true;
+  },
+  beforeUnmount() {
+    this.$store.state.showNavbar = true;
+    this.$store.state.showSidenav = true;
   },
 };
 </script>
