@@ -5,11 +5,11 @@
       <h6 class="mb-0">{{ title }}</h6>
       <div class="d-flex">
         <div class="mb-0 text-sm p font-weight-bold widget-calendar-day">
-          Tuesday
+          {{ today }}
         </div>
         <span>,&nbsp;</span>
         <div class="mb-1 text-sm p font-weight-bold widget-calendar-year">
-          2021
+          {{ year }}
         </div>
       </div>
     </div>
@@ -25,6 +25,16 @@ import { Calendar } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 export default {
   name: "Calendar",
+
+  data() {
+    return {
+      today: new Date().toLocaleDateString("en-us", {
+        weekday: "long",
+      }),
+      year: new Date().getFullYear(),
+    };
+  },
+
   props: {
     title: {
       type: String,
@@ -32,6 +42,18 @@ export default {
     },
   },
   mounted() {
+    let params = {
+      member_seq: "",
+    };
+
+    this.axios.post("/api/calendarList", params).then((res) => {
+      console.log(res);
+    });
+
+    this.axios.post("/api/main/contentsList", params).then((res) => {
+      console.log(res);
+    });
+
     var calendar = new Calendar(document.getElementById("widget-calendar"), {
       contentHeight: "auto",
       plugins: [dayGridPlugin],
