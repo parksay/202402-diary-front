@@ -321,10 +321,14 @@ export default {
   },
   components: {},
   mounted() {
-    //let loginInfo = this.$store.state.loginInfo;
-    //this.member_seq = loginInfo.loginId;
-    this.member_seq = "1";
-    this.search();
+    let loginInfo = this.$store.state.loginInfo;
+    console.log("loginInfo : " + JSON.stringify(loginInfo));
+
+    if (loginInfo != undefined) {
+      console.log("memberSeq : " + loginInfo.memberSeq);
+      this.member_seq = loginInfo.memberSeq;
+      this.search();
+    }
   },
   methods: {
     //폴더 조회
