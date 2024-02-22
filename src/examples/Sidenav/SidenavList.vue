@@ -324,7 +324,7 @@ export default {
     let loginInfo = this.$store.state.loginInfo;
     console.log("loginInfo : " + JSON.stringify(loginInfo));
 
-    if (loginInfo != undefined) {
+    if (loginInfo.memberSeq != undefined) {
       console.log("memberSeq : " + loginInfo.memberSeq);
       this.member_seq = loginInfo.memberSeq;
       this.search();
