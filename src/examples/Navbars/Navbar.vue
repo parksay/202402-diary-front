@@ -25,7 +25,7 @@
         <ul class="navbar-nav justify-content-end">
           <li class="nav-item d-flex align-items-center">
             <router-link
-              :to="{ name: 'Signin' }"
+              :to="this.$store.state.loginInfo ? { name: 'Signin' } : { name: 'Signin' }"
               class="px-0 nav-link font-weight-bold text-white"
               target="blank"
             >
@@ -33,7 +33,7 @@
                 class="fa fa-user"
                 :class="this.$store.state.isRTL ? 'ms-sm-2' : 'me-sm-2'"
               ></i>
-              <span class="d-sm-inline d-none">로그인</span>
+              <span class="d-sm-inline d-none">{{ this.$store.state.loginInfo ? '로그아웃' : '로그인' }}</span>
             </router-link>
           </li>
           <li class="nav-item d-flex align-items-center" style="margin-left: 10px;">
@@ -42,7 +42,7 @@
               class="px-0 nav-link font-weight-bold text-white"
               target="blank"
             >
-              <span class="d-sm-inline d-none">회원가입</span>
+            <span class="d-sm-inline d-none" v-if="!this.$store.state.loginInfo">회원가입</span>
             </router-link>
           </li>
           <li class="nav-item d-xl-none ps-3 d-flex align-items-center">

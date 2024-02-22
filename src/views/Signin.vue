@@ -24,21 +24,25 @@
                   <p class="mb-0">Enter your email and password to sign in</p>
                 </div>
                 <div class="card-body">
-                  <form role="form">
+                  <div>
                     <div class="mb-3">
                       <argon-input
-                        type="email"
-                        placeholder="Email"
-                        name="email"
+                        type="text"
+                        placeholder="ID"
+                        name="loginID"
                         size="lg"
+                        v-on:input="inputHandler"
+                        v-model:value="param.loginID"
                       />
                     </div>
                     <div class="mb-3">
                       <argon-input
                         type="password"
-                        placeholder="Password"
+                        placeholder="PASSWORD"
                         name="password"
                         size="lg"
+                        v-on:input="inputHandler"
+                        v-model:value="param.password"
                       />
                     </div>
                     <argon-switch id="rememberMe">Remember me</argon-switch>
@@ -50,10 +54,11 @@
                         color="success"
                         fullWidth
                         size="lg"
+                        v-on:click="onclickLogin"
                         >Sign in</argon-button
                       >
                     </div>
-                  </form>
+                  </div>
                 </div>
                 <div class="px-1 pt-0 text-center card-footer px-lg-2">
                   <p class="mx-auto mb-4 text-sm">
@@ -102,6 +107,7 @@ import Navbar from "@/examples/PageLayout/Navbar.vue";
 import ArgonInput from "@/components/ArgonInput.vue";
 import ArgonSwitch from "@/components/ArgonSwitch.vue";
 import ArgonButton from "@/components/ArgonButton.vue";
+
 const body = document.getElementsByTagName("body")[0];
 
 export default {
@@ -125,6 +131,67 @@ export default {
     this.$store.state.showSidenav = true;
     this.$store.state.showFooter = true;
     body.classList.add("bg-gray-100");
+  },
+  mounted: function () {
+    this.axios.defaults.headers.common["Authorization"] = null;
+    localStorage.setItem('accessToken', null);
+    localStorage.setItem('refreshToken', null);
+    localStorage.setItem('expireTime', null);
+    this.$store.state.loginInfo = null;
+  },
+  data: function() {
+    return {
+      param: {
+        loginID: '',
+        password: '',
+      },
+    };
+  },
+  methods: {
+    onclickLogin: function() {
+      let vm = this;
+      this.axios(
+        { 
+          url: "/api/auth/login", 
+          data: vm.param, 
+          method: "post" 
+        }, {
+          headers: { "Content-Type": "application/json" },
+        }).then((response) => {
+          if(!response.data.result) {
+            alert('아이디와 비밀번호를 확인해 주세요');
+            return;
+          } 
+          this.axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.accessToken}`;
+          localStorage.setItem('accessToken', response.data.accessToken);
+          localStorage.setItem('refreshToken', response.data.refreshToken);
+          localStorage.setItem('expireTime', response.data.expireTime);
+          this.$store.state.loginInfo = {
+            accessToken: response.data.accessToken, 
+            refreshToken: response.data.refreshToken,
+            memberSeq: response.data.memberSeq, 
+            loginID: response.data.loginID, 
+            name: response.data.name, 
+            expireTime: response.data.expireTime, 
+          };
+          this.$router.push("/");
+        }).catch((err) => {
+          console.log(err);
+        });
+    },
+    inputHandler: function(e) {
+      let vm = this;
+      const targetName = e.target.name;
+      vm.param[targetName] = e.target.value;
+    },
+    testHandler: function() {
+      console.log(localStorage.getItem('accessToken'));
+      console.log(this.$store.state);
+      console.log(this.$route);
+      
+      console.log(this.$store.state.loginInfo);
+      console.log(this.$store.state.loginInfo.loginID);
+    }
   },
 };
 </script>
