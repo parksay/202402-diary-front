@@ -321,12 +321,9 @@ export default {
   },
   components: {},
   mounted() {
-    let loginInfo = this.$store.state.loginInfo;
-    console.log("loginInfo : " + JSON.stringify(loginInfo));
-
-    if (loginInfo.memberSeq != undefined) {
-      console.log("memberSeq : " + loginInfo.memberSeq);
-      this.member_seq = loginInfo.memberSeq;
+    if (this.$store.state.loginInfo) {
+      // console.log("memberSeq : " + this.$store.state.loginInfo.memberSeq);
+      this.member_seq = this.$store.state.loginInfo.memberSeq;
       this.search();
     }
   },
