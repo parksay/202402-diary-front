@@ -176,7 +176,7 @@ export default {
           localStorage.setItem("loginInfo", JSON.stringify(response.data));
 
           this.$store.commit("changeLoginInfo", response.data);
-          // this.$router.push("/");
+          this.$router.push("/");
         })
         .catch((err) => {
           console.log(err);
