@@ -136,10 +136,11 @@ export default {
   },
   mounted: function () {
     this.axios.defaults.headers.common["Authorization"] = null;
-    localStorage.setItem("accessToken", null);
-    localStorage.setItem("refreshToken", null);
-    localStorage.setItem("expireTime", null);
-    this.$store.state.loginInfo = null;
+    // this.$store.state.loginInfo = null; // 이렇게 하면 store 에서 state mutation 을 catch 하지 못함 // this.$store.commit("changeLoginInfo", null); // 해놓고 store 선언할 때 mutations 에다가 loadLoginInfo 함수 선언해줘야 함
+
+    this.$store.commit("changeLoginInfo", null);
+
+    // localStorage.setItem("accessToken", null); // 이렇게 하는 거보다 전체 삭제 //  localStorage.clear();  // 나중에 뭐 필요한 거 남겨둬야 하면 골라서 해야겠지만 지금은 전체 삭제 하는 게 깔끔.
     localStorage.clear();
   },
   data: function () {
@@ -171,28 +172,11 @@ export default {
           this.axios.defaults.headers.common[
             "Authorization"
           ] = `Bearer ${response.data.accessToken}`;
-          localStorage.setItem("accessToken", response.data.accessToken);
-          localStorage.setItem("refreshToken", response.data.refreshToken);
-          localStorage.setItem("expireTime", response.data.expireTime);
 
-          // this.$store.state.loginInfo = {
-          //   accessToken: response.data.accessToken,
-          //   refreshToken: response.data.refreshToken,
-          //   memberSeq: response.data.memberSeq,
-          //   loginID: response.data.loginID,
-          //   name: response.data.name,
-          //   expireTime: response.data.expireTime,
-          // };
+          localStorage.setItem("loginInfo", JSON.stringify(response.data));
 
-          this.$store.commit("MU_LOGIN", {
-            accessToken: response.data.accessToken,
-            refreshToken: response.data.refreshToken,
-            memberSeq: response.data.memberSeq,
-            loginID: response.data.loginID,
-            name: response.data.name,
-            expireTime: response.data.expireTime,
-          });
-          this.$router.push("/");
+          this.$store.commit("changeLoginInfo", response.data);
+          // this.$router.push("/");
         })
         .catch((err) => {
           console.log(err);
@@ -204,12 +188,13 @@ export default {
       vm.param[targetName] = e.target.value;
     },
     testHandler: function () {
-      console.log(localStorage.getItem("accessToken"));
-      console.log(this.$store.state);
-      console.log(this.$route);
-
-      console.log(this.$store.state.loginInfo);
-      console.log(this.$store.state.loginInfo.loginID);
+      //  <button v-on:click="testHandler">test button</button>
+      const loginInfo = this.getLoginInfo();
+      console.log(loginInfo);
+      const loginID = loginInfo.loginID;
+      console.log(loginID);
+      const memberSeq = loginInfo.memberSeq;
+      console.log(memberSeq);
     },
   },
 };

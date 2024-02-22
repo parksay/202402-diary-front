@@ -11,5 +11,8 @@ const app = createApp(App);
 app.use(store);
 app.use(router);
 app.config.globalProperties.axios = axios;
+app.config.globalProperties.getLoginInfo = function () {
+  return JSON.parse(localStorage.getItem("loginInfo"));
+};
 app.use(ArgonDashboard);
 app.mount("#app");
