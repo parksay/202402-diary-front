@@ -14,6 +14,9 @@
                 </div>
                 <div class="p-3 card-body" style="width: 100%; height: 400px">
                   <h6>{{ this.oneNotice.contents }}</h6>
+                  <div style="white-space: pre; overflow: auto">
+                    {{ this.oneNotice.contents }}
+                  </div>
                 </div>
                 <!-- 수정 삭제 a 태그 href 유지후 @click 이벤트 걸것 -->
                 <!-- 관리자이외 일반 유저 진입시 v-if로 수정 삭제 버튼 막을것 -->
