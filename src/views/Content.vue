@@ -26,7 +26,9 @@
                   </a>
                   <a
                     class="btn btn-link text-danger text-gradient px-3 mb-0"
-                    href="javascript:;"
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#contentsDelete"
                   >
                     <i class="far fa-trash-alt me-2" aria-hidden="true"></i>삭제
                   </a>
@@ -34,7 +36,9 @@
               </div>
             </div>
           </div>
+          <!--href="javascript:;" -->
           <!-- 최근작성한 글  -->
+
           <!-- <div class="col-lg-4 mb-lg">
             <TransactionCard></TransactionCard>
           </div> -->
@@ -42,7 +46,7 @@
       </div>
     </div>
   </div>
-  <!-- 신규 글 작성 Modal -->
+  <!-- 글 수정 Modal -->
   <div class="col-md-4">
     <div
       class="modal fade"
@@ -91,6 +95,46 @@
                       @click="contentUpdate()"
                     >
                       글 수정
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <!-- 글 삭제 Modal -->
+    <div
+      class="modal fade"
+      id="contentsDelete"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalSignTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+          <div class="modal-body p-0">
+            <div class="card card-plain">
+              <div class="card-header pb-0 text-left">
+                <h3 class="font-weight-bolder text-primary text-gradient">
+                  삭제 하시겠습니까?
+                </h3>
+              </div>
+              <div class="card-body pb-3">
+                <form role="form text-left">
+                  <div class="modal-footer">
+                    <button
+                      data-bs-dismiss="modal"
+                      type="button"
+                      class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0"
+                      @click="contentsDelete()"
+                    >
+                      삭제
                     </button>
                   </div>
                 </form>
@@ -171,17 +215,36 @@ export default {
           console.log("글이 성공적으로 수정되었습니다.");
           alert("글이 성공적으로 수정되었습니다.");
           vm.search();
-
-          // this.item = {
-          //   modal_title: this.modal_title,
-          //   modal_contents: this.modal_contents
-          // };
         })
         .catch(function (error) {
           if (error.response.status < 500) {
             return;
           }
           console.error("글 수정 중 오류가 발생했습니다.", error);
+        });
+    },
+    contentsDelete: function () {
+      // alert("글 삭제 ~~~~ ");
+      let vm = this;
+      let contentsSeq = this.$route.query.contentsSeq;
+
+      let params = {
+        contents_seq: contentsSeq,
+      };
+      this.axios
+        .post("/api/contentsDelete", params)
+        .then(function (response) {
+          console.log("글이 성공적으로 삭제되었습니다.");
+          alert("글이 성공적으로 삭제되었습니다.");
+          vm.contentsSeq = response.data.contents_seq;
+          vm.item = response.data;
+        })
+        .catch(function (error) {
+          console.log(error);
+          if (error.response.status < 500) {
+            return;
+          }
+          alert("에러! API 요청에 오류가 있습니다. " + error);
         });
     },
   },
