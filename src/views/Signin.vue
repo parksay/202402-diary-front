@@ -68,7 +68,7 @@
                     <br />
                     <router-link
                       class="text-success text-gradient font-weight-bold"
-                      to="/signUp"
+                      to="/signup"
                     >
                       회원가입
                     </router-link>
@@ -170,14 +170,18 @@ export default {
             alert("아이디와 비밀번호를 확인해 주세요");
             return;
           }
+
+          // axios 설정에다가 header 에 default 로 들어갈 값을 지정
           this.axios.defaults.headers.common[
             "Authorization"
           ] = `Bearer ${response.data.accessToken}`;
 
+          // localStorage 에는 객체 그대로 저장하면 object 이런 식으로 나와서 JSON.stringify(data); 해서 저장하고 반대로 꺼낼 때도 JSON.parse(data); 해서 꺼내 써야 함.
           localStorage.setItem("loginInfo", JSON.stringify(response.data));
 
           this.$store.commit("changeLoginInfo", response.data);
-          this.$router.push("/");
+          this.$router.push({ name: "Dashboard" }); // router 정보는 ./router/index.js 에 있음
+          // this.$router.push("/");
         })
         .catch((err) => {
           console.log(err);
@@ -190,12 +194,36 @@ export default {
     },
     testHandler: function () {
       //  <button v-on:click="testHandler">test button</button>
-      const loginInfo = this.$globalFunctions.getLoginInfo();
-      console.log(loginInfo);
-      const loginID = loginInfo.loginID;
-      console.log(loginID);
-      const memberSeq = this.$globalFunctions.getLoginInfo().memberSeq;
-      console.log(memberSeq);
+      // const loginInfo = this.$globalFunctions.getLoginInfo();
+      // console.log(loginInfo);
+      // const loginID = loginInfo.loginID;
+      // console.log(loginID);
+      // const memberSeq = this.$globalFunctions.getLoginInfo().memberSeq;
+      // console.log(memberSeq);
+      // this.axios
+      //   .get("/api/auth/test")
+      //   .then((response) => {
+      //     console.log(response);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+      // this.axios(
+      //   {
+      //     url: "/api/auth/test",
+      //     data: { hello: "world" },
+      //     method: "post",
+      //   },
+      //   {
+      //     headers: { "Content-Type": "application/json" },
+      //   }
+      // )
+      //   .then((response) => {
+      //     console.log(response);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
     },
   },
 };

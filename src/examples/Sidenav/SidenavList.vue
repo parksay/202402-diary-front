@@ -328,8 +328,6 @@ export default {
   components: {},
   mounted() {
     let loginInfo = this.$globalFunctions.getLoginInfo();
-    console.log("loginInfo : " + JSON.stringify(loginInfo));
-
     if (loginInfo) {
       console.log("memberSeq : " + loginInfo.memberSeq);
       this.member_seq = loginInfo.memberSeq;

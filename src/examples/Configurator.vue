@@ -126,22 +126,25 @@ export default {
     },
     sidenavTypeOnResize() {
       let white = document.querySelector("#btn-white");
+      if (white == null) {
+        return;
+      }
       if (window.innerWidth < 1200) {
         white.classList.add("disabled");
       } else {
         white.classList.remove("disabled");
       }
-    }
+    },
   },
   computed: {
     sidenavResponsive() {
       return this.sidenavTypeOnResize;
-    }
+    },
   },
   beforeMount() {
     this.$store.state.isTransparent = "bg-transparent";
     window.addEventListener("resize", this.sidenavTypeOnResize);
     window.addEventListener("load", this.sidenavTypeOnResize);
-  }
+  },
 };
 </script>
