@@ -13,7 +13,7 @@
                   <h6>{{ this.oneNotice.title }}</h6>
                 </div>
                 <div class="p-3 card-body" style="width: 100%; height: 400px">
-                  <div>{{ this.oneNotice.contents }}</div>
+                  <h6>{{ this.oneNotice.contents }}</h6>
                 </div>
                 <!-- 수정 삭제 a 태그 href 유지후 @click 이벤트 걸것 -->
                 <!-- 관리자이외 일반 유저 진입시 v-if로 수정 삭제 버튼 막을것 -->
@@ -29,7 +29,7 @@
                     </a>
                   </router-link>
                   <a
-                    v-if="this.$store.state.loginInfo.loginID === 'admin'"
+                    v-if="this.loginID === 'admin'"
                     class="btn btn-link text-dark px-3 mb-0"
                     type="button"
                     data-bs-toggle="modal"
@@ -42,7 +42,7 @@
                     >수정
                   </a>
                   <a
-                    v-if="this.$store.state.loginInfo.loginID === 'admin'"
+                    v-if="this.loginID === 'admin'"
                     class="btn btn-link text-danger text-gradient px-3 mb-0"
                     type="button"
                     @click="deletNotice()"
@@ -123,10 +123,17 @@ export default {
       title: "",
       contents: "",
       notice_seq: "",
+      loginID: "",
     };
   },
   components: {},
   created() {
+    if (this.$globalFunctions.getLoginInfo() != null) {
+      if (this.$globalFunctions.getLoginInfo().loginID == "admin") {
+        this.loginID = this.$globalFunctions.getLoginInfo().loginID;
+      }
+    }
+
     let param = { notice_seq: this.$route.query.notice_seq };
     this.axios
       .post("/api/oneNotice", param)
