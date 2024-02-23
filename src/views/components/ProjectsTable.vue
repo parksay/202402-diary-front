@@ -226,7 +226,7 @@ export default {
           notice_seq: this.minSeq,
           title: this.title,
           contents: this.contents,
-          member_seq: this.$store.state.loginInfo.member_seq,
+          member_seq: this.$globalFunctions.getLoginInfo().member_seq,
           user_status: 1,
         };
         console.log(param, "if");

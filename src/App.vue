@@ -83,24 +83,27 @@ export default {
     const vm = this;
     // 로그인해야 하는 경우 처리
     const requestLogin = function () {
-      alert("로그인 후 이용해주세요");
+      // alert("로그인 후 이용해주세요");
       vm.$router.push({ name: "Signin" });
     };
+
     // 로그인하지 않아도 axios 요청 보낼 수 있는 url
     const allowUrlList = ["/api/auth/login"];
     // 요청 인터셉터 추가하기
     this.axios.interceptors.request.use(
       function (config) {
+        //const auth = config.headers.get("Authorization").startsWith("Bearer ");
         // 요청이 전달되기 전에 작업 수행
         if (
           allowUrlList.includes(config.url) ||
-          (!allowUrlList.includes(config.url) &&
-            config.headers.Authorization != null &&
-            config.headers.Authorization.startsWith("Bearer "))
+          (config.headers.get("Authorization") != null &&
+            config.headers.get("Authorization").startsWith("Bearer "))
         ) {
           // 허용 url 리스트에 있거나, 리스트에 없지만 header 에 토큰 정보가 있는 경우
           return config;
         }
+        console.log("interceptors.request >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
         // 로그인해야 하는 경우
         requestLogin();
       },
@@ -121,12 +124,25 @@ export default {
         // 2xx 외의 범위에 있는 상태 코드는 이 함수를 트리거 합니다.
         // 응답 오류가 있는 작업 수행
         if (error.response.status == 403) {
+          console.log("interceptors.response >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
           // 로그인해야 하는 경우
           requestLogin();
         }
         return Promise.reject(error);
       }
     );
+
+    // 앱 리로드 시에 localStorage 에 token 정보 있다면 axios header 에 default 값으로 넣어주기
+    const loginInfo = this.$globalFunctions.getLoginInfo();
+    if (
+      loginInfo != null &&
+      loginInfo.accessToken != null &&
+      loginInfo.accessToken.split(".").length == 3
+    ) {
+      this.axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${loginInfo.accessToken}`;
+    }
 
     // 로그인 없이도 접근할 수 있는 router path 목록
     const allowPathList = ["/signin", "/signup"];
