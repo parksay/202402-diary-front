@@ -405,23 +405,21 @@ export default {
     // 신규글 생성
     ContentCreate: function () {
       let params = {
-        contents_seq: this.$route.query.contentsSeq,
-        folder_seq: this.PfolderSeqfolderSeq,
-        member_seq: this.$route.query.memberSeq,
+        folder_seq: this.PfolderSeq,
         title: this.title,
         contents: this.contents,
         action: "I",
       };
 
       console.log("params==>" + JSON.stringify(params));
-      let vm = this;
+      // let vm = this;
 
       this.axios
         .post("/api/contentsSave", params)
         .then(() => {
           console.log("글이 성공적으로 등록되었습니다.");
           alert("글이 성공적으로 등록되었습니다.");
-          vm.search();
+          this.search();
         })
         .catch(function (error) {
           if (error.response.status < 500) {
