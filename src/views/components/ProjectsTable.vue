@@ -50,7 +50,7 @@
               <td>
                 <div class="d-flex px-3">
                   <div class="my-auto">
-                    <h6 class="mb-0 text-sm">{{ item.notice_seq }}</h6>
+                    <h6 class="mb-0 text-sm">{{ item.rowNum }}</h6>
                   </div>
                 </div>
               </td>
