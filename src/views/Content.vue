@@ -10,8 +10,8 @@
                   class="p-3 card-body"
                   style="width: 60%; height: 600px; white-space: pre"
                 >
-                  <h6>{{ item.title }}</h6>
-                  <h6>{{ item.contents }}</h6>
+                  <h6 style="font-size: 25px">{{ item.title }}</h6>
+                  <h6 style="font-size: 14px">{{ item.contents }}</h6>
                 </div>
                 <div class="ms-auto text-end" style="margin: 5px">
                   <a

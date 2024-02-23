@@ -265,7 +265,7 @@
                     <input
                       type="text"
                       class="form-control"
-                      placeholder="title"
+                      placeholder="글 제목을 입력해 주세요 "
                       aria-label="글 제목"
                       aria-describedby="name-addon"
                       v-model="title"
@@ -275,7 +275,7 @@
                   <div class="input-group mb-3">
                     <textarea
                       class="form-control"
-                      placeholder="contents"
+                      placeholder="글 내용을 입력해 주세요 "
                       aria-label="With textarea"
                       v-model="contents"
                       style="height: 300px; resize: none"
@@ -417,6 +417,7 @@ export default {
         .then(() => {
           console.log("글이 성공적으로 등록되었습니다.");
           alert("글이 성공적으로 등록되었습니다.");
+          //location.reload();
           this.search();
         })
         .catch(function (error) {
