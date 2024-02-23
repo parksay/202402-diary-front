@@ -6,7 +6,10 @@
           <div class="col-lg-7 mb-lg">
             <div class="card z-index-1">
               <div class="card">
-                <div class="p-3 card-body" style="width: 60%; height: 600px">
+                <div
+                  class="p-3 card-body"
+                  style="width: 60%; height: 600px; white-space: pre"
+                >
                   <h6>{{ item.title }}</h6>
                   <h6>{{ item.contents }}</h6>
                 </div>
