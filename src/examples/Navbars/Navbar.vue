@@ -7,7 +7,7 @@
     v-bind="$attrs"
     id="navbarBlur"
     data-scroll="true"
-    style="margin-left: 5rem !important;"
+    style="margin-left: 5rem !important"
   >
     <div class="px-3 py-1 container-fluid">
       <breadcrumbs :currentPage="currentRouteName" textWhite="text-white" />
@@ -20,12 +20,15 @@
         <div
           class="pe-md-3 d-flex align-items-center"
           :class="this.$store.state.isRTL ? 'me-md-auto' : 'ms-md-auto'"
-        >
-        </div>
+        ></div>
         <ul class="navbar-nav justify-content-end">
           <li class="nav-item d-flex align-items-center">
             <router-link
-              :to="this.$store.state.loginInfo ? { name: 'Signin' } : { name: 'Signin' }"
+              :to="
+                this.$globalFunctions.getLoginInfo() != null
+                  ? { name: 'Profile' }
+                  : { name: 'Signin' }
+              "
               class="px-0 nav-link font-weight-bold text-white"
               target="blank"
             >
@@ -33,16 +36,40 @@
                 class="fa fa-user"
                 :class="this.$store.state.isRTL ? 'ms-sm-2' : 'me-sm-2'"
               ></i>
-              <span class="d-sm-inline d-none">{{ this.$store.state.loginInfo ? '로그아웃' : '로그인' }}</span>
+              <span class="d-sm-inline d-none">{{
+                this.$globalFunctions.getLoginInfo() != null
+                  ? "마이페이지"
+                  : "로그인"
+              }}</span>
             </router-link>
           </li>
-          <li class="nav-item d-flex align-items-center" style="margin-left: 10px;">
+          <li
+            v-if="this.$globalFunctions.getLoginInfo() != null"
+            class="nav-item d-flex align-items-center"
+            style="margin-left: 10px"
+          >
+            <router-link
+              :to="{ name: 'Signin' }"
+              class="px-0 nav-link font-weight-bold text-white"
+              target="blank"
+            >
+              <span class="d-sm-inline d-none">로그아웃</span>
+            </router-link>
+          </li>
+          <li
+            class="nav-item d-flex align-items-center"
+            style="margin-left: 10px"
+          >
             <router-link
               :to="{ name: 'Signup' }"
               class="px-0 nav-link font-weight-bold text-white"
               target="blank"
             >
-            <span class="d-sm-inline d-none" v-if="!this.$store.state.loginInfo">회원가입</span>
+              <span
+                class="d-sm-inline d-none"
+                v-if="this.$globalFunctions.getLoginInfo() == null"
+                >회원가입</span
+              >
             </router-link>
           </li>
           <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -200,7 +227,7 @@ export default {
   name: "navbar",
   data() {
     return {
-      showMenu: false
+      showMenu: false,
     };
   },
   props: ["minNav", "textWhite"],
@@ -214,15 +241,15 @@ export default {
     toggleSidebar() {
       this.toggleSidebarColor("bg-white");
       this.navbarMinimize();
-    }
+    },
   },
   components: {
-    Breadcrumbs
+    Breadcrumbs,
   },
   computed: {
     currentRouteName() {
       return this.$route.name;
-    }
-  }
+    },
+  },
 };
 </script>

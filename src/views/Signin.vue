@@ -47,7 +47,7 @@
                         @keyup.enter="onclickLogin"
                       />
                     </div>
-                    <argon-switch id="rememberMe">Remember me</argon-switch>
+                    <!-- <argon-switch id="rememberMe">Remember me</argon-switch> -->
 
                     <div class="text-center">
                       <argon-button
@@ -65,10 +65,11 @@
                 <div class="px-1 pt-0 text-center card-footer px-lg-2">
                   <p class="mx-auto mb-4 text-sm">
                     Don't have an account?
-                    <router-link class="nav-link me-2" to="/sign">
-                      <a
-                        class="text-success text-gradient font-weight-bold"
-                      ></a>
+                    <br />
+                    <router-link
+                      class="text-success text-gradient font-weight-bold"
+                      to="/signUp"
+                    >
                       회원가입
                     </router-link>
                   </p>
@@ -107,7 +108,7 @@
 <script>
 import Navbar from "@/examples/PageLayout/Navbar.vue";
 import ArgonInput from "@/components/ArgonInput.vue";
-import ArgonSwitch from "@/components/ArgonSwitch.vue";
+// import ArgonSwitch from "@/components/ArgonSwitch.vue";
 import ArgonButton from "@/components/ArgonButton.vue";
 
 const body = document.getElementsByTagName("body")[0];
@@ -117,7 +118,7 @@ export default {
   components: {
     Navbar,
     ArgonInput,
-    ArgonSwitch,
+    // ArgonSwitch,
     ArgonButton,
   },
   created() {
