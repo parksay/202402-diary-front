@@ -178,9 +178,9 @@ export default {
     };
   },
   created() {
-    if (this.$store.state.loginInfo) {
-      if (this.$store.state.loginInfo.loginID == "admin") {
-        this.loginStatus = this.$store.state.loginInfo.loginID;
+    if (this.$globalFunctions.getLoginInfo() != null) {
+      if (this.$globalFunctions.getLoginInfo().loginID == "admin") {
+        this.loginStatus = this.$globalFunctions.getLoginInfo();
       }
     }
     this.axios

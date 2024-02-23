@@ -36,14 +36,7 @@
                   placeholder="Password"
                   aria-label="Password"
                 />
-                <argon-checkbox checked>
-                  <label class="form-check-label" for="flexCheckDefault">
-                    개인정보 수집 이용에
-                    <a href="javascript:;" class="text-dark font-weight-bolder"
-                      >동의합니다.</a
-                    >
-                  </label>
-                </argon-checkbox>
+
                 <div class="text-center">
                   <argon-button
                     fullWidth
@@ -55,10 +48,12 @@
                 </div>
                 <p class="text-sm mt-3 mb-0" style="text-align: center">
                   Already have an account?
-                  <router-link class="nav-link me-2" to="/signin">
-                    <a class="text-success text-gradient font-weight-bold"
-                      >로그인</a
-                    >
+                  <br />
+                  <router-link
+                    class="text-success text-gradient font-weight-bold"
+                    to="/signIn"
+                  >
+                    로그인
                   </router-link>
                 </p>
               </form>
@@ -75,7 +70,7 @@
 import Navbar from "@/examples/PageLayout/Navbar.vue";
 import AppFooter from "@/examples/PageLayout/Footer.vue";
 import ArgonInput from "@/components/ArgonInput.vue";
-import ArgonCheckbox from "@/components/ArgonCheckbox.vue";
+// import ArgonCheckbox from "@/components/ArgonCheckbox.vue";
 import ArgonButton from "@/components/ArgonButton.vue";
 const body = document.getElementsByTagName("body")[0];
 
@@ -85,7 +80,7 @@ export default {
     Navbar,
     AppFooter,
     ArgonInput,
-    ArgonCheckbox,
+    // ArgonCheckbox,
     ArgonButton,
   },
   created() {
