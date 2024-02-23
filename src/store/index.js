@@ -1,4 +1,5 @@
 import { createStore } from "vuex";
+import createPersistedState from "vuex-persistedstate";
 
 export default createStore({
   state: {
@@ -19,8 +20,12 @@ export default createStore({
     layout: "default",
     folderSeq: "",
     contentsSeq: "",
+    loginInfo: null,
   },
   mutations: {
+    changeLoginInfo(state, data) {
+      state.loginInfo = data;
+    },
     toggleConfigurator(state) {
       state.showConfig = !state.showConfig;
     },
@@ -54,4 +59,5 @@ export default createStore({
     },
   },
   getters: {},
+  plugins: [createPersistedState()],
 });

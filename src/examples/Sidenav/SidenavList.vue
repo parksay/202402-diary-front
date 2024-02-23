@@ -88,7 +88,6 @@
         </li>
       </template>
       <li class="nav-item">
-        <!-- 추후 herf 유지하고(마우스 버튼표시) @click 이벤트 걸어야함 -->
         <a
           class="nav-link active"
           type="button"
@@ -107,7 +106,7 @@
         <h6
           class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6"
         >
-          신규 뭔가할꺼?
+          공지사항
         </h6>
       </li>
       <li class="nav-item">
@@ -210,7 +209,7 @@
                       placeholder="Name"
                       aria-label="Name"
                       aria-describedby="name-addon"
-                      v-model="mod_folder_Name"
+                      v-model="pmodfolderName"
                     />
                   </div>
                   <div class="modal-footer">
@@ -317,6 +316,7 @@ export default {
       },
       PfolderSeq: "",
       pfolderName: "",
+      pmodfolderName: "",
       isActive: "active",
 
       // 글 관련 데이터
@@ -327,10 +327,14 @@ export default {
   },
   components: {},
   mounted() {
-    //let loginInfo = this.$store.state.loginInfo;
-    //this.member_seq = loginInfo.loginId;
-    this.member_seq = "1";
-    this.search();
+    let loginInfo = this.$globalFunctions.getLoginInfo();
+    console.log("loginInfo : " + JSON.stringify(loginInfo));
+
+    if (loginInfo) {
+      console.log("memberSeq : " + loginInfo.memberSeq);
+      this.member_seq = loginInfo.memberSeq;
+      this.search();
+    }
   },
   methods: {
     //폴더 조회
@@ -360,6 +364,7 @@ export default {
           .then((response) => {
             console.log(JSON.stringify(response));
             this.folder_Name = "";
+            location.reload();
             this.search();
           })
           .catch(function (error) {
@@ -372,20 +377,21 @@ export default {
     folderSeq: function (folderSeq, folderName) {
       console.table(folderSeq + " " + folderName);
       this.PfolderSeq = folderSeq;
-      this.mod_folder_Name = folderName;
+      this.pmodfolderName = folderName;
     },
     //폴더 수정
     folderModify: function (stat) {
       let params = new URLSearchParams();
       params.append("folder_seq", this.PfolderSeq);
-      params.append("folder_name", this.mod_folder_Name);
+      params.append("folder_name", this.pmodfolderName);
       params.append("stat", stat);
-      if (this.folder_Name != null) {
+      if (this.pmodfolderName != null) {
         this.axios
           .post("/api/folderModify", params)
           .then((response) => {
             console.log(JSON.stringify(response));
-            this.mod_folder_Name = "";
+            this.pmodfolderName = "";
+            location.reload();
             this.search();
           })
           .catch(function (error) {
@@ -400,7 +406,7 @@ export default {
     ContentCreate: function () {
       let params = {
         contents_seq: this.$route.query.contentsSeq,
-        folder_seq: this.PfolderSeq,
+        folder_seq: this.PfolderSeqfolderSeq,
         member_seq: this.$route.query.memberSeq,
         title: this.title,
         contents: this.contents,

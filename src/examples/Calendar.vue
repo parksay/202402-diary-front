@@ -5,11 +5,11 @@
       <h6 class="mb-0">{{ title }}</h6>
       <div class="d-flex">
         <div class="mb-0 text-sm p font-weight-bold widget-calendar-day">
-          Tuesday
+          {{ Calendartoday }}
         </div>
         <span>,&nbsp;</span>
         <div class="mb-1 text-sm p font-weight-bold widget-calendar-year">
-          2021
+          {{ Calendaryear }}
         </div>
       </div>
     </div>
@@ -25,6 +25,20 @@ import { Calendar } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 export default {
   name: "Calendar",
+
+  data() {
+    return {
+      // 달력 초기값 설정
+      Calendartoday: new Date().toLocaleDateString("en-us", {
+        weekday: "long",
+      }),
+      Calendaryear: new Date().getFullYear(),
+
+      // 오늘 날짜
+      today: "",
+    };
+  },
+
   props: {
     title: {
       type: String,
@@ -32,6 +46,21 @@ export default {
     },
   },
   mounted() {
+    // 오늘 날짜 호출
+    this.getToday();
+
+    // let params = {
+    //   member_seq: "",
+    // };
+
+    // this.axios.post("/api/calendarList", params).then((res) => {
+    //   console.log(res);
+    // });
+
+    // this.axios.post("/api/main/contentsList", params).then((res) => {
+    //   console.log(res);
+    // });
+
     var calendar = new Calendar(document.getElementById("widget-calendar"), {
       contentHeight: "auto",
       plugins: [dayGridPlugin],
@@ -39,7 +68,7 @@ export default {
       headerToolbar: false,
       selectable: true,
       editable: true,
-      initialDate: "2024-02-19",
+      initialDate: this.today,
       events: [
         {
           title: "Call with Dave",
@@ -85,8 +114,8 @@ export default {
 
         {
           title: "Marketing event",
-          start: "2020-12-10",
-          end: "2020-12-10",
+          start: "2024-02-22",
+          end: "2024-02-22",
           className: "bg-gradient-primary",
         },
 
@@ -111,31 +140,27 @@ export default {
           className: "bg-gradient-warning",
         },
       ],
-      views: {
-        month: {
-          titleFormat: {
-            month: "long",
-            year: "numeric",
-          },
-        },
-        agendaWeek: {
-          titleFormat: {
-            month: "long",
-            year: "numeric",
-            day: "numeric",
-          },
-        },
-        agendaDay: {
-          titleFormat: {
-            month: "short",
-            year: "numeric",
-            day: "numeric",
-          },
-        },
-      },
     });
 
     calendar.render();
+  },
+  methods: {
+    getToday() {
+      // 오늘 날짜 포맷
+      let today = new Date();
+
+      let dateFormat =
+        today.getFullYear() +
+        "-" +
+        (today.getMonth() + 1 < 9
+          ? "0" + (today.getMonth() + 1)
+          : today.getMonth() + 1) +
+        "-" +
+        (today.getDate() < 9 ? "0" + today.getDate() : today.getDate());
+
+      // 오늘 날짜 설정
+      this.today = dateFormat;
+    },
   },
 };
 </script>

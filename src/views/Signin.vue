@@ -24,21 +24,27 @@
                   <p class="mb-0">Enter your email and password to sign in</p>
                 </div>
                 <div class="card-body">
-                  <form role="form">
+                  <div>
                     <div class="mb-3">
                       <argon-input
-                        type="email"
-                        placeholder="Email"
-                        name="email"
+                        type="text"
+                        placeholder="ID"
+                        name="loginID"
                         size="lg"
+                        v-on:input="inputHandler"
+                        v-model:value="param.loginID"
+                        @keyup.enter="onclickLogin"
                       />
                     </div>
                     <div class="mb-3">
                       <argon-input
                         type="password"
-                        placeholder="Password"
+                        placeholder="PASSWORD"
                         name="password"
                         size="lg"
+                        v-on:input="inputHandler"
+                        v-model:value="param.password"
+                        @keyup.enter="onclickLogin"
                       />
                     </div>
                     <argon-switch id="rememberMe">Remember me</argon-switch>
@@ -50,10 +56,11 @@
                         color="success"
                         fullWidth
                         size="lg"
+                        v-on:click="onclickLogin"
                         >Sign in</argon-button
                       >
                     </div>
-                  </form>
+                  </div>
                 </div>
                 <div class="px-1 pt-0 text-center card-footer px-lg-2">
                   <p class="mx-auto mb-4 text-sm">
@@ -102,6 +109,7 @@ import Navbar from "@/examples/PageLayout/Navbar.vue";
 import ArgonInput from "@/components/ArgonInput.vue";
 import ArgonSwitch from "@/components/ArgonSwitch.vue";
 import ArgonButton from "@/components/ArgonButton.vue";
+
 const body = document.getElementsByTagName("body")[0];
 
 export default {
@@ -125,6 +133,69 @@ export default {
     this.$store.state.showSidenav = true;
     this.$store.state.showFooter = true;
     body.classList.add("bg-gray-100");
+  },
+  mounted: function () {
+    this.axios.defaults.headers.common["Authorization"] = null;
+    // this.$store.state.loginInfo = null; // 이렇게 하면 store 에서 state mutation 을 catch 하지 못함 // this.$store.commit("changeLoginInfo", null); // 해놓고 store 선언할 때 mutations 에다가 loadLoginInfo 함수 선언해줘야 함
+
+    this.$store.commit("changeLoginInfo", null);
+
+    // localStorage.setItem("accessToken", null); // 이렇게 하는 거보다 전체 삭제 //  localStorage.clear();  // 나중에 뭐 필요한 거 남겨둬야 하면 골라서 해야겠지만 지금은 전체 삭제 하는 게 깔끔.
+    localStorage.clear();
+  },
+  data: function () {
+    return {
+      param: {
+        loginID: "",
+        password: "",
+      },
+    };
+  },
+  methods: {
+    onclickLogin: function () {
+      let vm = this;
+      this.axios(
+        {
+          url: "/api/auth/login",
+          data: vm.param,
+          method: "post",
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+        .then((response) => {
+          if (!response.data.result) {
+            alert("아이디와 비밀번호를 확인해 주세요");
+            return;
+          }
+          this.axios.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${response.data.accessToken}`;
+
+          localStorage.setItem("loginInfo", JSON.stringify(response.data));
+
+          this.$store.commit("changeLoginInfo", response.data);
+          this.$router.push("/");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    inputHandler: function (e) {
+      let vm = this;
+      const targetName = e.target.name;
+      vm.param[targetName] = e.target.value;
+    },
+    testHandler: function () {
+      //  <button v-on:click="testHandler">test button</button>
+      const loginInfo = this.$globalFunctions.getLoginInfo();
+      console.log(loginInfo);
+      const loginID = loginInfo.loginID;
+      console.log(loginID);
+      const memberSeq = this.$globalFunctions.getLoginInfo().memberSeq;
+      console.log(memberSeq);
+    },
   },
 };
 </script>
