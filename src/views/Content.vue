@@ -252,5 +252,13 @@ export default {
         });
     },
   },
+  beforeMount() {
+    this.$store.state.showNavbar = true;
+    this.$store.state.showSidenav = true;
+  },
+  beforeUnmount() {
+    this.$store.state.showNavbar = true;
+    this.$store.state.showSidenav = true;
+  },
 };
 </script>
