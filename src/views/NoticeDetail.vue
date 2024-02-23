@@ -13,7 +13,6 @@
                   <h6>{{ this.oneNotice.title }}</h6>
                 </div>
                 <div class="p-3 card-body" style="width: 100%; height: 400px">
-                  <h6>{{ this.oneNotice.contents }}</h6>
                   <div style="white-space: pre; overflow: auto">
                     {{ this.oneNotice.contents }}
                   </div>
