@@ -226,6 +226,7 @@ export default {
           console.error("글 수정 중 오류가 발생했습니다.", error);
         });
     },
+    // 글 삭제
     contentsDelete: function () {
       // alert("글 삭제 ~~~~ ");
       let vm = this;
