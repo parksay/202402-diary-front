@@ -114,8 +114,8 @@ export default {
 
         {
           title: "Marketing event",
-          start: "2024-02-22",
-          end: "2024-02-22",
+          start: "2020-02-22",
+          end: "2020-02-22",
           className: "bg-gradient-primary",
         },
 

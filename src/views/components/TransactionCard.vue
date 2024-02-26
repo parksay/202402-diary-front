@@ -54,9 +54,7 @@ export default {
   },
   created() {
     let params = {
-      member_seq: this.$globalFunctions.getLoginInfo()
-        ? this.$globalFunctions.getLoginInfo().member_seq
-        : "",
+      member_seq: this.$globalFunctions.getLoginInfo().memberSeq,
     };
 
     this.axios.post("/api/main/contentsList", params).then((res) => {

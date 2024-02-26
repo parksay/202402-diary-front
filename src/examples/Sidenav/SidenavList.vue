@@ -420,6 +420,7 @@ export default {
           alert("글이 성공적으로 등록되었습니다.");
           this.title = "";
           this.contents = "";
+          location.reload();
           this.search();
         })
         .catch(function (error) {

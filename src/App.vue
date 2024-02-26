@@ -24,6 +24,7 @@ Coded by www.creative-tim.com
       this.$store.state.isRTL ? 'fixed-end' : 'fixed-start',
     ]"
     v-if="this.$store.state.showSidenav"
+    :key="$route.fullPath"
   />
   <main
     class="main-content position-relative max-height-vh-100 h-100 border-radius-lg"
@@ -37,7 +38,7 @@ Coded by www.creative-tim.com
       :minNav="navbarMinimize"
       v-if="this.$store.state.showNavbar"
     />
-    <router-view :key="$route.fullPath"></router-view>
+    <router-view @update="pageReload" :key="$route.fullPath"></router-view>
     <configurator
       :toggle="toggleConfigurator"
       :class="[
@@ -60,8 +61,18 @@ export default {
     Configurator,
     Navbar,
   },
+  data() {
+    return {
+      refreshPage: 0,
+    };
+  },
   methods: {
     ...mapMutations(["toggleConfigurator", "navbarMinimize"]),
+    pageReload(msg) {
+      if (msg == "reload") {
+        this.refreshPage += 1;
+      }
+    },
   },
   computed: {
     navClasses() {

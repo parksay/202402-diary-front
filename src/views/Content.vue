@@ -242,6 +242,10 @@ export default {
           alert("글이 성공적으로 삭제되었습니다.");
           vm.contentsSeq = response.data.contents_seq;
           vm.item = response.data;
+
+          // 글 삭제시 부모 컴포넌트로 데이터 전달
+          vm.$emit("update", "reload");
+          vm.$router.push("/");
         })
         .catch(function (error) {
           console.log(error);
