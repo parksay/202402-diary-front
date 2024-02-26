@@ -418,7 +418,8 @@ export default {
         .then(() => {
           console.log("글이 성공적으로 등록되었습니다.");
           alert("글이 성공적으로 등록되었습니다.");
-          location.reload();
+          this.title = "";
+          this.contents = "";
           this.search();
         })
         .catch(function (error) {
