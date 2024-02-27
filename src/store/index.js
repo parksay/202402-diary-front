@@ -23,7 +23,7 @@ export default createStore({
     loginInfo: null,
   },
   mutations: {
-    MU_LOGIN(state, data) {
+    changeLoginInfo(state, data) {
       state.loginInfo = data;
     },
     toggleConfigurator(state) {

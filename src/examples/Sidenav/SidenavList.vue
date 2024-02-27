@@ -49,7 +49,9 @@
                   >
                     <a class="nav-link active">
                       <span class="sidenav-mini-icon"> </span>
-                      <span class="sidenav-normal"> {{ i.title }} </span>
+                      <span class="sidenav-normal">
+                        {{ i.title }}
+                      </span>
                     </a>
                   </router-link>
                 </li>
@@ -60,6 +62,7 @@
                   type="button"
                   data-bs-toggle="modal"
                   data-bs-target="#ContentCreate"
+                  @click="folderSeq(list.folder_seq, list.folder_name)"
                 >
                   <span class="sidenav-mini-icon"> C </span>
                   <span class="sidenav-normal"> + 신규글쓰기 </span>
@@ -262,7 +265,7 @@
                     <input
                       type="text"
                       class="form-control"
-                      placeholder="글 제목"
+                      placeholder="글 제목을 입력해 주세요 "
                       aria-label="글 제목"
                       aria-describedby="name-addon"
                       v-model="title"
@@ -272,7 +275,7 @@
                   <div class="input-group mb-3">
                     <textarea
                       class="form-control"
-                      placeholder="글 내용"
+                      placeholder="글 내용을 입력해 주세요 "
                       aria-label="With textarea"
                       v-model="contents"
                       style="height: 300px; resize: none"
@@ -298,6 +301,8 @@
   </div>
 </template>
 <script>
+//import { EventBus } from "/../EventBus";
+
 export default {
   name: "SidenavList",
   props: {
@@ -309,7 +314,7 @@ export default {
         folderList: [],
         loginId: "",
       },
-      pfolderSeq: "",
+      PfolderSeq: "",
       pfolderName: "",
       pmodfolderName: "",
       isActive: "active",
@@ -317,13 +322,15 @@ export default {
       // 글 관련 데이터
       title: "",
       contents: "",
+      // cfolderSeq: "",
     };
   },
   components: {},
   mounted() {
-    if (this.$store.state.loginInfo) {
-      // console.log("memberSeq : " + this.$store.state.loginInfo.memberSeq);
-      this.member_seq = this.$store.state.loginInfo.memberSeq;
+    let loginInfo = this.$globalFunctions.getLoginInfo();
+    if (loginInfo) {
+      console.log("memberSeq : " + loginInfo.memberSeq);
+      this.member_seq = loginInfo.memberSeq;
       this.search();
     }
   },
@@ -366,7 +373,7 @@ export default {
       }
     },
     folderSeq: function (folderSeq, folderName) {
-      // console.table(folderSeq + " " + folderName);
+      console.table(folderSeq + " " + folderName);
       this.PfolderSeq = folderSeq;
       this.pmodfolderName = folderName;
     },
@@ -392,6 +399,74 @@ export default {
         alert("에러 폴더명을 입력해주세요.");
       }
     },
+
+    // 신규글 생성
+    ContentCreate: function () {
+      let params = {
+        //   contents_seq: this.$route.query.contentsSeq,
+        folder_seq: this.PfolderSeq,
+        title: this.title,
+        contents: this.contents,
+        action: "I",
+      };
+
+      console.log("params==>" + JSON.stringify(params));
+      // let vm = this;
+
+      this.axios
+        .post("/api/contentsSave", params)
+        .then(() => {
+          console.log("글이 성공적으로 등록되었습니다.");
+          alert("글이 성공적으로 등록되었습니다.");
+          this.title = "";
+          this.contents = "";
+          location.reload();
+          this.search();
+        })
+        .catch(function (error) {
+          if (error.response.status < 500) {
+            return;
+          }
+          console.error("글 수정 중 오류가 발생했습니다.", error);
+        });
+    },
+
+    // ContentCreate() {
+    //   // eslint-disable-next-line vue/custom-event-name-casing
+    //   EventBus.$emit("Content-Create");
+    // },
+    // ContentCreate() {
+    //   EventBus.$on("transferText", (res) => {
+    //     console.log(res);
+    //   });
+    //},
+    // contentsMove: function (e, folderSeq, contentsSeq) {
+    // e.preventDefault();
+
+    // this.$router.push({
+    //   name: "Content",
+    //   query: { folderSeq: folderSeq, contentsSeq: contentsSeq },
+
+    // });
+    // this.$router.go();
+
+    // console.log(folderSeq, contentsSeq);
+    // console.log(
+    //   "store : " +
+    //     this.$store.state.folderSeq +
+    //     " " +
+    //     this.$store.state.contentsSeq
+    // );
+    // //prop 에 담고 api 호출
+    // this.$store.state.folderSeq = folderSeq;
+    // this.$store.state.contentsSeq = contentsSeq;
+    // console.log(
+    //   "store : " +
+    //     this.$store.state.folderSeq +
+    //     " " +
+    //     this.$store.state.contentsSeq
+    // );
+    // },
   },
 };
 </script>

@@ -5,7 +5,22 @@
     :class="isBlur ? isBlur : 'shadow-none my-2 navbar-transparent w-100'"
   >
     <div class="container ps-2 pe-0">
+      <div
+        v-if="this.$globalFunctions.getLoginInfo() == null"
+        class="navbar-brand font-weight-bolder ms-lg-0 ms-3"
+        :class="darkMode ? 'text-black' : 'text-white'"
+        style="
+          -ms-user-select: none;
+          -moz-user-select: -moz-none;
+          -webkit-user-select: none;
+          -khtml-user-select: none;
+          user-select: none;
+        "
+      >
+        Diary Project
+      </div>
       <router-link
+        v-if="this.$globalFunctions.getLoginInfo() != null"
         class="navbar-brand font-weight-bolder ms-lg-0 ms-3"
         :class="darkMode ? 'text-black' : 'text-white'"
         to="/"
@@ -26,33 +41,12 @@
           <span class="navbar-toggler-bar bar3"></span>
         </span>
       </button>
-      <div class="collapse navbar-collapse" id="navigation">
+      <!-- <div class="collapse navbar-collapse" id="navigation">
         <ul class="navbar-nav mx-auto">
-          <li class="nav-item">
-            <router-link
-              class="nav-link d-flex align-items-center me-2 active"
-              aria-current="page"
-              to="/"
-            >
-              <i
-                class="fa fa-chart-pie opacity-6 me-1"
-                aria-hidden="true"
-                :class="isBlur ? 'text-dark' : 'text-white'"
-              ></i>
-              메인화면
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link me-2" to="/profile">
-              <i
-                class="fa fa-user opacity-6 me-1"
-                aria-hidden="true"
-                :class="isBlur ? 'text-dark' : 'text-white'"
-              ></i>
-              마이페이지
-            </router-link>
-          </li>
-          <li class="nav-item">
+          <li
+            class="nav-item"
+            v-if="this.$globalFunctions.getLoginInfo() == null"
+          >
             <router-link class="nav-link me-2" to="/signin">
               <i
                 class="fas fa-user-circle opacity-6 me-1"
@@ -62,7 +56,10 @@
               로그인
             </router-link>
           </li>
-          <li class="nav-item">
+          <li
+            class="nav-item"
+            v-if="this.$globalFunctions.getLoginInfo() == null"
+          >
             <router-link class="nav-link me-2" to="/signup">
               <i
                 class="fas fa-key opacity-6 me-1"
@@ -73,7 +70,7 @@
             </router-link>
           </li>
         </ul>
-      </div>
+      </div> -->
     </div>
   </nav>
   <!-- End Navbar -->
@@ -88,7 +85,7 @@ export default {
   data() {
     return {
       downArrWhite,
-      downArrBlack
+      downArrBlack,
     };
   },
   props: {
@@ -97,15 +94,15 @@ export default {
     isBtn: { type: String, default: "bg-gradient-light" },
     darkMode: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
     darkModes() {
       return {
-        "text-dark": this.darkMode
+        "text-dark": this.darkMode,
       };
-    }
-  }
+    },
+  },
 };
 </script>
