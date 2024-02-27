@@ -44,7 +44,7 @@ Coded by www.creative-tim.com
         this.$store.state.showConfig ? 'show' : '',
         this.$store.state.hideConfigButton ? 'd-none' : '',
       ]"
-    />
+    /> 
   </main>
 </template>
 <script>
